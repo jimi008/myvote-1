@@ -1,0 +1,3171 @@
+<html>
+<head>
+<title>My Vote</title>
+
+<!-- Metadata -->
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+<!-- Stylesheets -->
+<link rel="apple-touch-icon" type="text/css"  href="logo.png">
+<link rel="apple-touch-icon-precomposed" type="text/css"  href="logo.png">
+<link rel="apple-touch-startup-image" type="text/css"  href="background.png" />
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+
+<!-- Scripts -->
+<script type='text/javascript' src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script type='text/javascript' src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+<script type='text/javascript' src="block.js"></script>
+
+
+<script type='text/javascript'>
+	function startSplash(){
+			$("#splash img#bottlecenter").show();
+			$("#splash img#bottleleft").show();
+			$("#splash img#bottleright").show();
+			
+			$("#splash img#bottleright").animate({top:totalh/2-60,left:totalw/2-50-17}, 2000);
+			$("#splash img#bottleleft").animate({top:totalh/2-60,left:totalw/2+50-39+17}, 2000);
+			$("#splash img#bottlecenter").animate({top:totalh/2-60}, 1500, function(){
+				$("#splash img#bottlecircle").fadeIn(1000);
+				setTimeout(function(){
+					$("#splash img#bottleleft").animate({top:10,left:totalw/2-50+3}, 2000);
+					$("#splash img#bottleright").animate({top:10,left:totalw/2+50-39-3}, 2000);
+					$("#splash img#bottlecenter").animate({top:10}, 2000, function(){
+							$('#splash img#textonly').fadeIn(1000);
+							$('#splash img#sport').fadeIn(1000);
+					});
+					$("#splash img#bottlecircle").fadeOut(1000);
+				}, 2000);
+			});
+		}
+		
+		$(document).ready(function(){
+			
+			totalw=$(window).width();
+			totalh=$(window).height();
+			$('#splash img#bottlecircle').css('top',totalh/2-95);
+			$('#splash img#bottlecircle').css('left',totalw/2 - 93 );
+			$("#splash img#textonly").css('top', 100);
+			$('#splash img#textonly').css('left',totalw/2 - 73 );
+			$("#splash img#sport").css('top', 130);
+			$('#splash img#sport').css('left',totalw/2 - 73 );
+			
+			$("#splash img#bottlecenter").css('top', totalh);
+			$("#splash img#bottleleft").css('top', totalh);
+			$("#splash img#bottleright").css('top', totalh);
+			
+			$("#splash img#bottleleft").css('left', totalw/2-100);
+			$("#splash img#bottleright").css('left', totalw/2+100-39);
+			$("#splash img#bottlecenter").css('left', totalw/2-20);
+			
+			setTimeout(startSplash,2000);
+			
+			$('#instruction_mix').live("swipeleft", function(){
+				$.mobile.changePage("#instruction_game", {
+					transition: "slide",
+					reverse: false
+				});
+			});
+			$('#instruction_game').live("swipeleft", function(){
+				$.mobile.changePage("#instruction_game_play", {
+					transition: "slide",
+					reverse: false
+				});
+			});
+			$('#instruction_game_play').live("swipeleft", function(){
+				$.mobile.changePage("#instruction_rewards", {
+					transition: "slide",
+					reverse: false
+				});
+			});
+			$('#instruction_rewards').live("swipeleft", function(){
+				$.mobile.changePage("#menu_page", {
+					transition: "slide",
+					reverse: false
+				});
+			});
+			$('#charter_page').live("swipeleft", function(){
+				if($("input[type='radio'][name='charter']:checked").val() == "0"){ 
+					localStorage.setItem('read_instr','1');
+					$.mobile.changePage("#loginpage", {
+					transition: "slide",
+					reverse: false
+					});		
+				}
+			});
+			
+			$('#instruction_game').live("swiperight", function(){
+				$.mobile.changePage("#instruction_mix", {
+					transition: "slide",
+					reverse: true
+				});
+			});
+			
+			$('#instruction_game_play').live("swiperight", function(){
+				$.mobile.changePage("#instruction_game", {
+					transition: "slide",
+					reverse: true
+				});
+			});
+			
+			$('#instruction_rewards').live("swiperight", function(){
+				$.mobile.changePage("#instruction_game_play", {
+					transition: "slide",
+					reverse: true
+				});
+			});
+			
+			$('#results_page').live("swiperight", function(){
+				$.mobile.changePage("#menu_page", {
+					transition: "slide",
+					reverse: true
+				});
+			});
+			
+			
+			$('#update_profile').live("swiperight", function(){
+				$.mobile.changePage("#menu_page", {
+					transition: "slide",
+					reverse: true
+				});
+			});
+			
+			$(".menulink").click(function(){
+				$(this).addClass('box_rotate box_transition');
+				setTimeout(function(){
+					$.mobile.changePage("#menu_page", {
+						transition: "slide",
+						reverse: true
+					});
+					//alert($(this).attr('class'));
+					$(".menulink").removeClass('box_rotate');
+					$(".menulink").removeClass('box_transition');
+					//alert($(this).attr('class'));
+				}, 500);
+			});
+			
+		});
+	
+	$('#splash').live('pageshow', function(){
+		var hideSplash = function() {
+			var temp = localStorage.getItem('read_instr');
+			var temp1 = localStorage.getItem('logged_in');
+			if(!temp){
+				$.mobile.changePage($("#charter_page"));
+			}
+			if(temp && !temp1){
+				$.mobile.changePage($("#loginpage"));
+			}
+			if(temp && temp1){
+				id = localStorage.getItem('user_id');
+				var request = $.ajax({
+					url: "http://modedawebtest.co.uk/myvote/api/answer/points?id=" + id,
+					type: "GET"
+				});
+		
+				request.done(function( msg ) {
+					console.log(msg);
+					localStorage.setItem('points',msg[0].Points);
+					$.mobile.changePage($("#menu_page"));
+				});
+				
+				request.fail(function( jqXHR, textStatus ) {
+				alert( "Request failed: " + textStatus );
+				});
+				
+			}
+		};
+	  setTimeout(hideSplash, 8000);
+	});
+	
+	//script for login_page
+	$('#loginpage').live('pageshow', function(e){
+		$("#lp_continue").click(function(e) {
+			if($('#txtEmail').val() == "" || $('#txtPassword').val() == ""){
+				alert("Please fill in all the details.");
+			}
+			else{
+			var str = "email=" + $('#txtEmail').val() + "&password=" + $('#txtPassword').val();
+
+			var request = $.ajax({
+				url: "http://modedawebtest.co.uk/myvote/api/user/login",
+				type: "POST",
+				data: str
+			});
+
+			request.done(function( msg ) {
+				console.log(msg);
+				if(msg.user_id == -1){
+					localStorage.setItem('email',$('#txtEmail').val());
+					localStorage.setItem('password',$('#txtPassword').val());
+					$.mobile.changePage($("#register_page"));
+				}
+	
+				else{
+					localStorage.setItem('user_id', msg.user_id);
+					localStorage.setItem('logged_in', '1');
+					id = localStorage.getItem('user_id');
+						var request = $.ajax({
+						url: "http://modedawebtest.co.uk/myvote/api/answer/points?id=" + id,
+						type: "GET"
+					});
+		
+					request.done(function( msg ) {
+					console.log(msg);
+					localStorage.setItem('points',msg[0].Points);
+					$.mobile.changePage($("#menu_page"));
+					});
+					
+					request.fail(function( jqXHR, textStatus ) {
+						alert( "Request failed: " + textStatus );
+					});
+				}
+			});
+
+			request.fail(function( jqXHR, textStatus ) {
+				alert( "Request failed: " + textStatus );
+			});
+			
+			}
+		});
+		
+		$("#register").click(function(e){
+			$.mobile.changePage($("#register_page"));
+		});
+
+	});
+	
+	//Script for instruction_sm page
+/*	$('#instruction_sm').live('pageshow', function(e){
+		$('#forward').click(function(e){
+			$.mobile.changePage($("#instruction_mix"));
+		});
+	});
+	
+	//Script for instruction_mix page
+	$('#instruction_mix').live('pagecreate', function(e){
+		$('#forward1').click(function(e){
+			$.mobile.changePage($("#instruction_game"));
+		});
+	});
+
+	//Script for instruction_game page
+	$('#instruction_game').live('pagecreate', function(e){
+		$('#forward2').click(function(e){
+			$.mobile.changePage($("#instruction_league"));
+		});
+	});
+	
+	//Script for instruction_league page
+	$('#instruction_league').live('pagecreate', function(e){
+		$('#forward3').click(function(e){
+			$.mobile.changePage($("#loginpage"));
+		});
+	});*/
+
+	//Script for register page
+	$('#register_page').live('pagecreate', function(e){
+		$("#rp_continue").click(function(e) {
+			if($('#name').val() == "" || $('#dob').val() == "" || $('#city').val() == "" || ($("input[name*=sex]:checked").val() != "0" && $("input[name*=sex]:checked").val() != "1")){
+				alert("Please fill in all the details.");
+			}
+			
+			else{
+			var str = "login_type=1&password=" + localStorage.getItem('password') + "&firstname=" + $("#name").val() + "&sex=" + $("input[name*=sex]:checked").val() + "&dob=" + $("#dob").val() + "&email=" + localStorage.getItem('email') + "&city=" + $("#city").val();
+			var request = $.ajax({
+				url: "http://modedawebtest.co.uk/myvote/api/user/register",
+				type: "POST",
+				data: str
+			});
+		
+			request.done(function( msg ) {
+				console.log(msg);
+				if(msg.user_id == -1){
+					alert("Server Error. Please try again");
+				}
+			
+				else{
+					localStorage.removeItem('email');
+					localStorage.removeItem('password');
+					localStorage.setItem('user_id', msg.user_id);
+					localStorage.setItem('logged_in','1');
+					id = localStorage.getItem('user_id');
+						var request = $.ajax({
+						url: "http://modedawebtest.co.uk/myvote/api/answer/points?id=" + id,
+						type: "GET"
+					});
+		
+					request.done(function( msg ) {
+					console.log(msg);
+					localStorage.setItem('points',msg[0].Points);
+					$.mobile.changePage($("#instruction_mix"));
+					});
+					
+					request.fail(function( jqXHR, textStatus ) {
+					alert( "Request failed: " + textStatus );
+					});
+				}
+			});
+ 
+			request.fail(function( jqXHR, textStatus ) {
+				alert( "Request failed: " + textStatus );
+			});
+			
+			}
+			
+		});
+	});
+
+	//Script for menu_page
+	$('#menu_page').live('pageshow', function(e){
+		$('#Points_mp').text(localStorage.getItem('points'));
+		$('#game_option').click(function(e){
+			if(localStorage.getItem('Q')){
+				alert("You have answered today's questions.");
+			}
+			else{
+				$.mobile.changePage($("#question_one_page"));
+			}
+		});
+				
+		$('#profile_option').click(function(e){
+			$.mobile.changePage($("#update_profile"));
+		});
+		
+		$('#results_option').click(function(e){
+			$.mobile.changePage($("#results_page"));
+		});
+		
+		$('#premiership_select_option').click(function(e){
+			$.mobile.changePage($("#premiership_select"));
+		});
+		
+		$('#league_option').click(function(e){
+			$.mobile.changePage($("#league_page"));
+		});
+		
+		$('#invite_option').click(function(e){
+			$.mobile.changePage($("#invite_page"));
+		});
+		
+	});
+	
+	//Script for question_one_page
+	$('#question_one_page').live('pageshow', function(e){
+	$.blockUI({ message: null });
+	$.mobile.loading( 'show', {text: 'Loading',textVisible: true,theme: 'b',html: ""});
+	$('#Points_q1').text(localStorage.getItem('points'));
+	$('#icon_q1').html('');
+	$('#icon_q2').html('');
+	$('#icon_q3').html('');
+	$('#q1_in_crowd').show();
+	$('#q1_out_crowd').show();
+	$('#q1_yes').show();
+	$('#q1_no').show();
+	
+	var load = 0;
+	var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+
+	var yyyy = today.getFullYear();
+	if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} today = yyyy+'-'+mm+'-'+dd;
+	
+	var temp = localStorage.getItem('question_date');
+	if(!temp || temp!=today){
+		localStorage.removeItem('Q');
+		localStorage.setItem('question_date',today);
+		var request = $.ajax({
+			url: "http://modedawebtest.co.uk/myvote/api/question",
+			type: "GET",
+		});
+		
+		request.done(function( msg ) {
+			console.log(msg);
+			var questions = JSON.stringify(msg);
+			localStorage.setItem('questions',questions);
+			$.each(msg.questions,function(i){
+				$('#q' + (i+1) + '_question').text(msg.questions[i].Question);
+				if(msg.questions[i].MediaType == "0"){
+					$('#display_q' + (i+1)).append('<iframe title="YouTube video player" class="youtube-player" type="text/html" width="220" height="130" src="' + msg.questions[i].MediaUrl + '" frameborder="0" allowFullScreen></iframe>');
+				}
+				else if(msg.questions[i].MediaType == "1"){
+					$('#display_q' + (i+1)).append('<img src="' + msg.questions[i].MediaUrl + '" />');
+				}
+			});
+			load = load + 1;
+		});
+ 
+		request.fail(function( jqXHR, textStatus ) {
+			$.mobile.changePage($("#lost_connection_page"));
+		});
+		
+		var request = $.ajax({
+			url: "http://modedawebtest.co.uk/myvote/api/question/types",
+			type: "GET",
+		});
+		
+		request.done(function( msg ) {
+			console.log(msg);
+			var questions_t = JSON.stringify(msg);
+			localStorage.setItem('questions_types',questions_t);
+			$.each(msg.questions_types,function(i){
+				$('#icon_q' + (i+1)).append('<img src="U1/' + msg.questions_types[i].name + '.png" />');
+			});
+			load = load + 1;
+		});
+ 
+		request.fail(function( jqXHR, textStatus ) {
+			$.mobile.changePage($("#lost_connection_page"));
+		});
+		
+	}
+	
+	else if(temp==today)
+	{
+		var question_asked = JSON.parse(localStorage.getItem('questions'));
+		$.each(question_asked.questions,function(i){
+			$('#q' + (i+1) + '_question').text(question_asked.questions[i].Question);
+			if(question_asked.questions[i].MediaType == "0"){
+				$('#display_q' + (i+1)).append('<iframe title="YouTube video player" class="youtube-player" type="text/html" width="220" height="130" src="' + question_asked.questions[i].MediaUrl + '" frameborder="0" allowFullScreen></iframe>');
+			}
+			else if(question_asked.questions[i].MediaType == "1"){
+				$('#display_q' + (i+1)).append('<img src="' + question_asked.questions[i].MediaUrl + '" />');
+			}
+		});
+		
+		load = load + 1;
+		
+		var question_t1 = JSON.parse(localStorage.getItem('questions_types'));
+		$.each(question_t1.questions_types,function(i){
+			$('#icon_q' + (i+1)).append('<img src="U1/' + question_t1.questions_types[i].name + '.png" />');
+		});
+		
+		if(localStorage.getItem('Q1') && localStorage.getItem('Q2')){
+			$.mobile.changePage( $("#question_three_page"), "slide", true, true);
+		}
+		
+		else if(localStorage.getItem('Q1')){
+			$.mobile.changePage( $("#question_two_page"), "slide", true, true);
+		}
+		
+		load = load + 1;
+	}
+	
+	if(load == 2){
+		$.mobile.loading('hide');
+		$.unblockUI();
+	}
+	
+	localStorage.setItem('q_answer', '-1');
+	localStorage.setItem('q_crowd', '-1');
+	$('#q1_yes').click(function(e) {
+			localStorage.setItem('q_answer', '0');
+			$("#q1_no").fadeOut("slow");
+			if(localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1'){
+				$.fn.q1_answer();
+			}
+		});
+		
+		$('#q1_no').click(function(e) {
+			localStorage.setItem('q_answer', '1');
+			$("#q1_yes").fadeOut("slow");
+			if(localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1'){
+				$.fn.q1_answer();
+			}
+		});
+		
+		$('#q1_in_crowd').click(function(e) {
+			localStorage.setItem('q_crowd', '0');
+			$("#q1_out_crowd").fadeOut("slow");
+			if(localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1'){
+				$.fn.q1_answer();
+			}
+		});
+		
+		$('#q1_out_crowd').click(function(e) {
+			localStorage.setItem('q_crowd', '-1');
+			$("#q1_in_crowd").fadeOut("slow");
+			if(localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1'){
+				$.fn.q1_answer();
+			}
+		});
+	$.fn.q1_answer = function() {
+		
+		var user_id = localStorage.getItem('user_id');
+		var question_asked = JSON.parse(localStorage.getItem('questions'));
+		var question_id = question_asked.questions[0].Question_Id;
+		
+		var str = "user_id=" + user_id + "&question_id=" + question_id + "&answer=" + localStorage.getItem('q_answer') + "&crowd=" + localStorage.getItem('q_crowd') + "&peer=-1&points_bet=0&points=0";
+		localStorage.removeItem('q_answer');
+		localStorage.removeItem('q_crowd');
+		var request = $.ajax({
+			url: "http://modedawebtest.co.uk/myvote/api/answer",
+			type: "POST",
+			data: str
+		});
+		
+		request.done(function( msg ) {
+			console.log(msg);
+			if(msg.success == 1){
+				localStorage.setItem('Q1','done');
+				$.mobile.changePage( $("#question_two_page"), "slide", true, true);
+			}
+			else{
+				alert("Server error. Please try again");
+			}
+		});
+ 
+		request.fail(function( jqXHR, textStatus ) {
+			$.mobile.changePage($("#lost_connection_page"));
+		});
+		}
+  });
+	
+	//Script for question_two_page
+	$('#question_two_page').live('pageshow', function(e){
+	$.blockUI({ message: null });
+	$.mobile.loading( 'show', {text: 'Loading',textVisible: true,theme: 'b',html: ""});
+	$('#Points_q2').text(localStorage.getItem('points'));
+	$('#q2_in_crowd').show();
+	$('#q2_out_crowd').show();
+	$('#q2_yes').show();
+	$('#q2_no').show();
+	$.mobile.loading( 'hide');
+	$.unblockUI();
+	localStorage.setItem('q_answer', '-1');
+	localStorage.setItem('q_crowd', '-1');
+	$('#q2_yes').click(function(e) {
+			localStorage.setItem('q_answer', '0');
+			$("#q2_no").fadeOut("slow");
+			if(localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1'){
+				$.fn.q2_answer();
+			}
+		});
+		
+		$('#q2_no').click(function(e) {
+			localStorage.setItem('q_answer', '1');
+			$("#q2_yes").fadeOut("slow");
+			if(localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1'){
+				$.fn.q2_answer();
+			}
+		});
+		
+		$('#q2_in_crowd').click(function(e) {
+			localStorage.setItem('q_crowd', '0');
+			$("#q2_out_crowd").fadeOut("slow");
+			if(localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1'){
+				$.fn.q2_answer();
+			}
+		});
+		
+		$('#q2_out_crowd').click(function(e) {
+			localStorage.setItem('q_crowd', '1');
+			$("#q2_in_crowd").fadeOut("slow");
+			if(localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1'){
+				$.fn.q2_answer();
+			}
+		});
+	$.fn.q2_answer = function() {
+		
+		var user_id = localStorage.getItem('user_id');
+		var question_asked = JSON.parse(localStorage.getItem('questions'));
+		var question_id = question_asked.questions[1].Question_Id;
+		
+		var str = "user_id=" + user_id + "&question_id=" + question_id + "&answer=" + localStorage.getItem('q_answer') + "&crowd=" + localStorage.getItem('q_crowd') + "&peer=-1&points_bet=0&points=0";
+		localStorage.removeItem('q_answer');
+		localStorage.removeItem('q_crowd');
+		var request = $.ajax({
+			url: "http://modedawebtest.co.uk/myvote/api/answer",
+			type: "POST",
+			data: str
+		});
+		
+		request.done(function( msg ) {
+			console.log(msg);
+			if(msg.success == 1){
+				localStorage.setItem('Q2','done');
+				$.mobile.changePage( $("#question_three_page"), "slide", true, true);
+			}
+			else{
+				alert("Server error. Please try again");
+			}
+		});
+ 
+		request.fail(function( jqXHR, textStatus ) {
+			$.mobile.changePage($("#lost_connection_page"));
+		});
+		}
+	});
+	
+	//Script for question_three_page
+	$('#question_three_page').live('pageshow', function(e){
+	$.blockUI({ message: null });
+	$.mobile.loading( 'show', {text: 'Loading',textVisible: true,theme: 'b',html: ""});
+	$('#Points_q3').text(localStorage.getItem('points'));
+	$('#q3_in_crowd').show();
+	$('#q3_out_crowd').show();
+	$('#q3_yes').show();
+	$('#q3_no').show();
+	$.mobile.loading( 'hide');
+	$.unblockUI();
+	localStorage.setItem('q_answer', '-1');
+	localStorage.setItem('q_crowd', '-1');
+	$('#q3_yes').click(function(e) {
+			localStorage.setItem('q_answer', '0');
+			$("#q3_no").fadeOut("slow");
+			if(localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1'){
+				$.fn.q3_answer();
+			}
+		});
+		
+		$('#q3_no').click(function(e) {
+			localStorage.setItem('q_answer', '1');
+			$("#q3_yes").fadeOut("slow");
+			if(localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1'){
+				$.fn.q3_answer();
+			}
+		});
+		
+		$('#q3_in_crowd').click(function(e) {
+			localStorage.setItem('q_crowd', '0');
+			$("#q3_out_crowd").fadeOut("slow");
+			if(localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1'){
+				$.fn.q3_answer();
+			}
+		});
+		
+		$('#q3_out_crowd').click(function(e) {
+			localStorage.setItem('q_crowd', '1');
+			$("#q3_in_crowd").fadeOut("slow");
+			if(localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1'){
+				$.fn.q3_answer();
+			}
+		});
+	$.fn.q3_answer = function() {
+		
+		var user_id = localStorage.getItem('user_id');
+		var question_asked = JSON.parse(localStorage.getItem('questions'));
+		var question_id = question_asked.questions[2].Question_Id;
+		
+		var str = "user_id=" + user_id + "&question_id=" + question_id + "&answer=" + localStorage.getItem('q_answer') + "&crowd=" + localStorage.getItem('q_crowd') + "&peer=-1&points_bet=0&points=0";
+		localStorage.removeItem('q_answer');
+		localStorage.removeItem('q_crowd');
+		var request = $.ajax({
+			url: "http://modedawebtest.co.uk/myvote/api/answer",
+			type: "POST",
+			data: str
+		});
+		
+		request.done(function( msg ) {
+			console.log(msg);
+			if(msg.success == 1){
+				localStorage.setItem('Q','done');
+				localStorage.removeItem('Q1');
+				localStorage.removeItem('Q2');
+				$.mobile.changePage( $("#menu_page"), "slide", true, true);
+			}
+			else{
+				alert("Server error. Please try again");
+			}
+		});
+ 
+		request.fail(function( jqXHR, textStatus ) {
+			$.mobile.changePage($("#lost_connection_page"));
+		});
+		}
+	});
+	
+	//Script for update_profile
+	$('#update_profile').live('pageshow', function(e){
+		$.blockUI({ message: null });
+		$.mobile.loading( 'show', {text: 'Loading',textVisible: true,theme: 'b',html: ""});
+		$('#Points_up').text(localStorage.getItem('points'));
+		$('#prem').text("points remaining : " + localStorage.getItem('points'));
+		var id = localStorage.getItem('user_id');
+		
+		$('#logout').click(function(e){
+			localStorage.removeItem('logged_in');
+			$.mobile.changePage($("#loginpage"));
+		});
+		
+		var request = $.ajax({
+			url: "http://modedawebtest.co.uk/myvote/api/user?id=" + id,
+			type: "GET",
+		});
+		
+		request.done(function( msg ) {
+			console.log(msg);
+			
+			var request = $.ajax({
+			url: "http://modedawebtest.co.uk/myvote/api/user/profile?id=" + id,
+			type: "GET",
+			});
+			
+			request.done(function( msg ) {
+				
+				if(msg[0].Fav_TeamSport){
+					$('#l5').text(msg[0].Fav_TeamSport);
+				}
+				else{
+					$('#l5').text("empty");
+				}
+				
+				if(msg[0].Fav_SportsTeam){
+					$('#l6').text(msg[0].Fav_SportsTeam);
+				}
+				else{
+					$('#l6').text("empty");
+				}
+				
+				if(msg[0].Fav_ISportsTeam){
+					$('#l7').text(msg[0].Fav_ISportsTeam);
+				}
+				else{
+					$('#l7').text("empty");
+				}
+				
+				if(msg[0].Fav_IndiSport){
+					$('#l8').text(msg[0].Fav_IndiSport);
+				}
+				else{
+					$('#l8').text("empty");
+				}
+				
+				if(msg[0].Fav_SportIndi){
+					$('#l9').text(msg[0].Fav_SportIndi);
+				}
+				else{
+					$('#l9').text("empty");
+				}
+				
+				if(msg[0].Fav_PremierTeam){
+					$('#l10').text(msg[0].Fav_PremierTeam);
+				}
+				else{
+					$('#l10').text("empty");
+				}
+			});
+			
+			if(!$('#l10').text()){
+				$('#l5').text("empty");
+				$('#l6').text("empty");
+				$('#l7').text("empty");
+				$('#l8').text("empty");
+				$('#l9').text("empty");
+				$('#l10').text("empty");
+			}
+			
+			if(msg[0].First_Name){
+				$('#l1').text(msg[0].First_Name);
+			}
+			
+			else{
+				$('#l1').text("empty");
+			}
+
+			if(msg[0].Sex == "0"){
+				//$('input:radio[name="sex"]').filter('[value="0"]').next().click();
+				$('#l3').text("Male");
+			}
+			
+			else if(msg[0].Sex == "1"){
+				//$('input:radio[name="sex"]').filter('[value="1"]').next().click();
+				$('#l3').text("Female");
+			}
+			
+			else{
+				$('#l3').text("empty");
+			}
+			
+			if(msg[0].Birth_Date){
+				$('#l2').text(msg[0].Birth_Date);
+			}
+			else{
+				$('#l2').text("empty");
+			}
+			
+			if(msg[0].City){
+				$('#l4').text(msg[0].City);
+			}
+			else{
+				$('#l4').text("empty");
+			}
+			
+			var temp = localStorage.getItem('points');
+			
+			for(i=1;i<9;i++){
+				if(temp < i*100){
+					$("#level" + i).attr("src","images/Level0.png");
+				}
+				else{
+					$("#level" + i).attr("src","images/Level" + i + ".png");
+				}
+			}
+			
+			$.mobile.loading( 'hide');
+			$.unblockUI();
+		});
+		
+				
+		
+		request.fail(function( jqXHR, textStatus ) {
+			$.mobile.changePage($("#lost_connection_page"));
+		});
+		
+	});
+	
+	//Script for results_page
+	$('#results_page').live('pageshow', function(e){
+		$.blockUI({ message: null });
+		$.mobile.loading( 'show', {text: 'Loading',textVisible: true,theme: 'b',html: ""});
+		$('#Points_rp').text(localStorage.getItem('points'));
+		var id = localStorage.getItem('user_id');
+		var request = $.ajax({
+			url: "http://modedawebtest.co.uk/myvote/api/answer?id=" + id,
+			type: "GET",
+		});
+		
+		request.done(function( msg ) {
+			
+			$('#q1_tab #q1').text("Q1. "+msg[0].Question);
+			$('#q2_tab #q2').text("Q2. "+msg[1].Question);
+			$('#q3_tab #q3').text("Q3. "+msg[2].Question);
+						
+			$('#q1_tab').show();
+			$('#q2_tab').show();
+			$('#q3_tab').show();
+			
+			
+			if(msg[0].Answer == "-1"){
+				$('#r1,#r2,#r3').hide();
+				$('#r1').parent().css('height','50px');
+			}
+			else{
+				$('#r1,#r2,#r3').show();
+			
+			if(msg[0].Answer == "0"){
+				$('#r1 div:nth-child(3)').text("YES");
+				$("#r1 .greenyes").show();
+				$("#r1 .grayno").hide();
+			}
+			else if(msg[0].Answer == "1"){
+				$('#r1 div:nth-child(3)').text("NO");
+				$("#r1 .greenyes").hide();
+				$("#r1 .grayno").show();
+			}
+			
+			$('#r2 .votedin').text("" + msg[0].Crowd.Percent + "% CROWD VOTED IN");
+			$('#r2>div>div').css('height', (100-msg[0].Crowd.Percent)*0.58);
+			
+			$('#r3 .votedin').text("" + msg[0].Crowd.Percent + "% PEERS VOTED IN");
+			$('#r3>div>div').css('height', (100-msg[0].Crowd.Percent)*0.58);
+			
+			}
+			
+			
+			
+			if(msg[1].Answer =="-1" ){
+				$('#r11,#r12,#r13').hide();
+				$('#r11').parent().css('height','50px');
+			}
+			else{
+				$('#r11,#r12,#r13').show();
+
+			if(msg[1].Answer == "0"){
+				$('#r11 div:nth-child(3)').text("YES");
+				$("#r11 .greenyes").show();
+				$("#r11 .grayno").hide();
+			}
+			else if(msg[1].Answer == "1"){
+				$('#r11 div:nth-child(3)').text("NO");
+				$("#r11 .greenyes").hide();
+				$("#r11 .grayno").show();
+			}
+			
+			$('#r12 .votedin').text("" + msg[1].Crowd.Percent + "% CROWD VOTED IN");
+			$('#r12>div>div').css('height', (100-msg[1].Crowd.Percent)*0.58);
+			
+			$('#r13 .votedin').text("" + msg[1].Crowd.Percent + "% PEERS VOTED IN");
+			$('#r13>div>div').css('height', (100-msg[1].Crowd.Percent)*0.58);
+			
+			}
+			
+			
+			if(msg[2].Answer =="-1"){
+				$('#r21,#r22,#r23').hide();
+				$('#r21').parent().css('height','50px');
+			}
+			else{
+				$('#r21,#r22,#r23').show();
+			if(msg[2].Answer == "0"){
+				$('#r21 div:nth-child(3)').text("YES");
+				$("#r21 .greenyes").show();
+				$("#r21 .grayno").hide();
+			}
+			else if(msg[2].Answer == "1"){
+				$('#r21 div:nth-child(3)').text("NO");
+				$("#r21 .greenyes").hide();
+				$("#r21 .grayno").show();
+			}
+			
+			$('#r22 .votedin').text("" + msg[2].Crowd.Percent + "% CROWD VOTED IN");
+			$('#r22>div>div').css('height', (100-msg[2].Crowd.Percent)*0.58);
+			
+			$('#r23 .votedin').text("" + msg[2].Crowd.Percent + "% PEERS VOTED IN");
+			$('#r23>div>div').css('height', (100-msg[2].Crowd.Percent)*0.58);
+			
+			
+			}
+		});
+		$.mobile.loading( 'hide');
+		$.unblockUI();
+	});
+	
+	//Script for premiership_select_page
+	$('#premiership_select').live('pageshow', function(event, ui){
+		$.blockUI({ message: null });
+		$.mobile.loading( 'show', {text: 'Loading',textVisible: true,theme: 'b',html: ""});
+		$('#Points_psp').text(localStorage.getItem('points'));
+		Date.prototype.getWeek = function() {
+			var onejan = new Date(this.getFullYear(),0,1);
+			return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
+		} 
+		
+		var today = new Date();
+		var weekno = today.getWeek(); 
+		var temp = localStorage.getItem('weekNo');
+		if(!temp || temp != weekno){
+		localStorage.setItem('weekNo',weekno);
+		var request = $.ajax({
+			url: "http://modedawebtest.co.uk/myvote/api/premier/teams",
+			type: "GET",
+		});
+		
+		request.done(function( msg ) {
+			$.each(msg.Teams,function(i){
+				$('#t' + (i+1)).text(msg.Teams[i].Name);
+			});
+			var teams = JSON.stringify(msg);
+			localStorage.setItem('teams',teams);
+			
+			var temp;
+			for(var j=1;j<=20;j++){
+				temp = localStorage.removeItem("t" + j);
+			}
+			
+			$.mobile.loading( 'hide');
+			$.unblockUI();
+		});
+		
+		request.fail(function( jqXHR, textStatus ) {
+				$.mobile.changePage($("#lost_connection_page"));
+		});
+		}
+		
+		else{
+			var msg = JSON.parse(localStorage.getItem('teams'));
+			$.each(msg.Teams,function(i){
+				$('#t' + (i+1)).text(msg.Teams[i].Name);
+			});
+			
+			var temp;
+			for(var j=1;j<=20;j++){
+				temp = localStorage.getItem('t'+ j);
+				if(temp){
+					if(j<=10){
+						$("#t" + j).attr('class', 'tag_left_done');
+					}
+					else{
+						$("#t" + j).attr('class', 'tag_right_done');
+					}
+				}
+			}
+			
+			$.mobile.loading( 'hide');
+			$.unblockUI();
+		}
+		
+		
+	});
+	
+	//Script for question_page
+	$('#question_page').live('pageshow', function(event, ui){
+		$.blockUI({ message: null });
+		$.mobile.loading( 'show', {text: 'Loading',textVisible: true,theme: 'b',html: ""});
+		$('#Points_q').text(localStorage.getItem('points'));
+		$('#q_in_crowd').show();
+		$('#q_out_crowd').show();
+		$('#q_yes').show();
+		$('#q_no').show();
+		localStorage.setItem('q_answer', '-1');
+		localStorage.setItem('q_crowd', '-1');
+		var team = localStorage.getItem('current_team');
+		
+		var str = "teamid=" + team;
+		
+		var request = $.ajax({
+			url: "http://modedawebtest.co.uk/myvote/api/premier/question",
+			type: "POST",
+			data: str
+		});
+		
+		request.done(function( msg ) {
+			$('#q_question').text(msg.Question);
+			if(msg.MediaType == "0"){
+					$('#display_q').append('<iframe title="YouTube video player" class="youtube-player" type="text/html" width="220" height="130" src="' + msg.MediaUrl + '" frameborder="0" allowFullScreen></iframe>');
+				}
+				else if(msg.MediaType == "1"){
+					$('#display_q').append('<img src="' + msg.MediaUrl + '" />');
+				}
+			localStorage.setItem('ques_no',msg.Question_Id);
+			$.mobile.loading( 'hide');
+			$.unblockUI();
+		});
+		
+		request.fail(function( jqXHR, textStatus ) {
+				$.mobile.changePage($("#lost_connection_page"));
+		});
+		
+		
+		$('#q_yes').click(function(e) {
+			localStorage.setItem('q_answer', '0');
+			$("#q_no").fadeOut("slow");
+			if(localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1'){
+				$.fn.q_answer();
+			}
+		});
+		
+		$('#q_no').click(function(e) {
+			localStorage.setItem('q_answer', '1');
+			$("#q_yes").fadeOut("slow");
+			if(localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1'){
+				$.fn.q_answer();
+			}
+		});
+		
+		$('#q_in_crowd').click(function(e) {
+			localStorage.setItem('q_crowd', '0');
+			$("#q_out_crowd").fadeOut("slow");
+			if(localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1'){
+				$.fn.q_answer();
+			}
+		});
+		
+		$('#q_out_crowd').click(function(e) {
+			localStorage.setItem('q_crowd', '1');
+			$("#q_in_crowd").fadeOut("slow");
+			if(localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1'){
+				$.fn.q_answer();
+			}
+		});
+		
+		$.fn.q_answer = function() {
+			var user_id = localStorage.getItem('user_id');
+			var question_id = localStorage.getItem('ques_no');
+		
+		var str = "user_id=" + user_id + "&question_id=" + question_id + "&answer=" + localStorage.getItem('q_answer') + "&crowd=" + localStorage.getItem('q_crowd') + "&peer=-1&points_bet=0&points=0";
+		localStorage.removeItem('q_answer');
+		localStorage.removeItem('q_crowd');
+		var request = $.ajax({
+			url: "http://modedawebtest.co.uk/myvote/api/premier/answer",
+			type: "POST",
+			data: str
+		});
+		
+		request.done(function( msg ) {
+			console.log(msg);
+			if(msg.success == 1){
+				localStorage.setItem('t' + team,'done');
+				$.mobile.changePage( $("#premiership_select"), "slide", true, true);
+			}
+			else{
+				alert("Server error. Please try again");
+			}
+		});
+ 
+		request.fail(function( jqXHR, textStatus ) {
+			$.mobile.changePage($("#lost_connection_page"));
+		});
+		}
+	});
+	
+	//Script for create_league
+	$('#create_league').live('pageshow', function(event, ui){
+		$.blockUI({ message: null });
+		$.mobile.loading( 'show', {text: 'Loading',textVisible: true,theme: 'b',html: ""});
+		$('#Points_clp').text(localStorage.getItem('points'));
+		$('#league_code').textinput('disable');
+		if(localStorage.getItem('league_code')){
+			$('#league_name').textinput('disable');
+			$('#league_name').val(localStorage.getItem('league_name'));
+			$('#league_code').val(localStorage.getItem('league_code'));
+		}
+		$.mobile.loading( 'hide');
+		$.unblockUI();
+		$('#cl_continue').click(function(e) {
+			if(!localStorage.getItem('league_code')){
+			if($('#league_name').val() == ""){
+				alert('Please specify the League Name.');
+			}
+			else{
+			$.blockUI({ message: null });
+			$.mobile.loading( 'show', {text: 'Loading',textVisible: true,theme: 'b',html: ""});
+			var league_name = $('#league_name').val();
+			var user_id = localStorage.getItem('user_id');
+			
+			var str = "user_id=" + user_id + "&league_name=" + league_name;
+		
+			var request = $.ajax({
+				url: "http://modedawebtest.co.uk/myvote/api/league/create",
+				type: "POST",
+				data: str
+			});
+			
+			request.done(function( msg ) {
+				console.log(msg);
+				if(msg.success == "-1"){
+					alert("Server Error. Please try again");
+				}
+			
+				else{
+					$('#league_code').val(msg.success);
+					$('#league_name').textinput('disable');
+					localStorage.setItem('league_code',msg.success);
+					localStorage.setItem('league_name',league_name);
+					$.mobile.loading( 'hide');
+					$.unblockUI();
+				}
+			});
+ 
+			request.fail(function( jqXHR, textStatus ) {
+				$.mobile.changePage($("#lost_connection_page"));
+			});
+			}
+			}
+		});
+		
+		$('#cl_continue1').click(function(e) {
+			$.mobile.changePage($("#menu_page"));
+		});
+	
+	});
+	
+	$('#join_league').live('pageshow', function(event, ui){
+		$('#Points_jlp').text(localStorage.getItem('points'));
+		$('#jl_confirm').click(function(e) {
+			if($('#league_name1').val() == "" || $('#league_code1').val() == ""){
+				alert("Please fill in all the details.")
+			}
+			else{
+			var league_name = $('#league_name1').val();
+			var user_id = localStorage.getItem('user_id');
+			var league_code = $('#league_code1').val();
+			
+			var str = "user_id=" + user_id + "&league_name=" + league_name + "&league_code=" + league_code;
+			
+			var request = $.ajax({
+				url: "http://modedawebtest.co.uk/myvote/api/league/join",
+				type: "POST",
+				data: str
+			});
+			
+			request.done(function( msg ) {
+				console.log(msg);
+				if(msg.success == "0"){
+					alert(msg.message);
+				}
+			
+				else if(msg.success == "1"){
+					alert("Congratulations, you have successfully joined the league - " + league_name);
+					$.mobile.changePage($("#menu_page"));
+				}
+			});
+			
+			request.fail(function( jqXHR, textStatus ) {
+				$.mobile.changePage($("#lost_connection_page"));
+			});
+			}
+		});
+	});
+	
+	$('#leaderboard_page').live('pageshow', function(event, ui){
+		$.blockUI({ message: null });
+		$.mobile.loading( 'show', {text: 'Loading',textVisible: true,theme: 'b',html: ""});
+		$('#Points_lbp').text(localStorage.getItem('points'));
+		var page_counter = 0;
+		var level = 0;
+		var request = $.ajax({
+			url: "http://modedawebtest.co.uk/myvote/api/leaderboard",
+			type: "GET",
+		});
+			
+		request.done(function( msg ) {
+			console.log(msg);
+			$('#lb').html('');
+			$('#lb').append('<tr class="heading1" style="background-color:#464646;color:white;border-color:#464646"><td style="width:20%;text-align:center;font-size:12px;">BADGE</td><td style="width:36%;text-align:center;font-size:12px;">PLAYER</td><td style="width:22%;text-align:center;font-size:12px;">ALL TIME SCORE</td><td style="width:22%;text-align:center;font-size:12px;">MONTHLY SCORE</td></tr>');
+			$.each(msg.leaderboard,function(i){
+				level = Math.floor((parseInt(msg.leaderboard[i].Points))/100);
+				$('#lb').append('<tr style="background-color:white;color:black;"><td style="width:20%;text-align:center;font-size:12px;"><img src="images/Level' + level + '.png" /></td><td style="width:36%;text-align:center;font-size:12px;">' + msg.leaderboard[i].First_Name + '</td><td style="width:22%;text-align:center;font-size:12px;">' + msg.leaderboard[i].Points + '</td><td style="width:22%;text-align:center;font-size:12px;">' + msg.leaderboard[i].Points + '</td></tr>')
+			});
+			if(msg.next_page == false){
+				$('#pnext').hide();
+			}
+			
+			$.mobile.loading( 'hide');
+			$.unblockUI();
+		});
+		
+		request.fail(function( jqXHR, textStatus ) {
+				$.mobile.changePage($("#lost_connection_page"));
+			});
+		
+		$('#pnext').click(function(e){
+			$.blockUI({ message: null });
+			$.mobile.loading( 'show', {text: 'Loading',textVisible: true,theme: 'b',html: ""});
+			page_counter = page_counter + 1;
+			
+			var request = $.ajax({
+				url: "http://modedawebtest.co.uk/myvote/api/leaderboard?page=" + page_counter,
+				type: "GET",
+			});
+			
+			request.done(function( msg ) {
+				console.log(msg);
+				$('#lb').html('');
+				$('#lb').append('<tr class="heading1" style="background-color:#464646;color:white;border-color:#464646"><td style="width:20%;text-align:center;font-size:12px;">BADGE</td><td style="width:36%;text-align:center;font-size:12px;">PLAYER</td><td style="width:22%;text-align:center;font-size:12px;">ALL TIME SCORE</td><td style="width:22%;text-align:center;font-size:12px;">MONTHLY SCORE</td></tr>');
+				$.each(msg.leaderboard,function(i){
+					level = Math.floor((parseInt(msg.leaderboard[i].Points))/100);
+					$('#lb').append('<tr style="background-color:white;color:black;"><td style="width:20%;text-align:center;font-size:12px;"><img src="images/Level' + level + '.png" /></td><td style="width:36%;text-align:center;font-size:12px;">' + msg.leaderboard[i].First_Name + '</td><td style="width:22%;;text-align:center;font-size:12px;">' + msg.leaderboard[i].Points + '</td><td style="width:22%;text-align:center;font-size:12px;">' + msg.leaderboard[i].Points + '</td></tr>')
+				});
+				if(msg.next_page == false){
+					$('#pnext').hide();
+				}
+				
+				$.mobile.loading( 'hide');
+				$.unblockUI();
+			});
+			
+			request.fail(function( jqXHR, textStatus ) {
+				$.mobile.changePage($("#lost_connection_page"));
+			});
+		});
+		
+		$('#pprev').click(function(e){
+		$.blockUI({ message: null });
+		$.mobile.loading( 'show', {text: 'Loading',textVisible: true,theme: 'b',html: ""});
+		if(page_counter>0){
+			page_counter = page_counter - 1;
+			var url_ws = "http://modedawebtest.co.uk/myvote/api/leaderboard";
+			
+			if(page_counter>0)
+			{
+				url_ws = url_ws + "?page=" + page_counter;
+			} 
+			
+			var request = $.ajax({
+				url: url_ws,
+				type: "GET",
+			});
+			
+			request.done(function( msg ) {
+				console.log(msg);
+				$('#lb').html('');
+				$('#lb').append('<tr class="heading1" style="background-color:#464646;color:white;border-color:#464646"><td style="width:20%;text-align:center;font-size:12px;">BADGE</td><td style="width:36%;text-align:center;font-size:12px;">PLAYER</td><td style="width:22%;text-align:center;font-size:12px;">ALL TIME SCORE</td><td style="width:22%;text-align:center;font-size:12px;">MONTHLY SCORE</td></tr>');
+				$.each(msg.leaderboard,function(i){
+					level = Math.floor((parseInt(msg.leaderboard[i].Points))/100);
+					$('#lb').append('<tr style="background-color:white;color:black;"><td style="width:20%;text-align:center;font-size:12px;"><img src="images/Level' + level + '.png" /></td><td style="width:36%;text-align:center;font-size:12px;">' + msg.leaderboard[i].First_Name + '</td><td style="width:22%;;text-align:center;font-size:12px;">' + msg.leaderboard[i].Points + '</td><td style="width:22%;text-align:center;font-size:12px;">' + msg.leaderboard[i].Points + '</td></tr>')
+				});
+				$('#pnext').show();
+				
+				$.mobile.loading( 'hide');
+				$.unblockUI();
+			});
+			
+			request.fail(function( jqXHR, textStatus ) {
+				$.mobile.changePage($("#lost_connection_page"));
+			});
+		}
+		
+		else if(page_counter==0){
+			$.mobile.changePage($("#my_league"));
+		}
+		});
+	});
+	
+	$('#my_league').live('pageshow', function(event, ui){
+		$.blockUI({ message: null });
+		$.mobile.loading( 'show', {text: 'Loading',textVisible: true,theme: 'b',html: ""});
+		$('#Points_ylp').text(localStorage.getItem('points'));
+		var id = localStorage.getItem('user_id');
+		var request = $.ajax({
+			url: "http://modedawebtest.co.uk/myvote/api/league?user_id=" + id,
+			type: "GET",
+		});
+		
+		request.done(function( msg ) {
+			$('#ll').html('');
+			$('#ll').append('<tr><td valign="middle" style="width:100%;text-align:center;font-size:12px;"><a href="#"><p id="ll" onclick="goLeague(-1)" style="background:#878788;color:white;padding:5px;" >Global League</p></a></td></tr>');
+			$.each(msg.Leagues,function(i){
+				$('#ll').append('<tr><td valign="middle" style="width:100%;text-align:center;font-size:12px;"><a href="#"><p id="ll' + i + '" onclick="goLeague(' + msg.Leagues[i].League_Id +')" style="background:#878788;color:white;padding:5px;" >' + msg.Leagues[i].Name + '</p></a></td></tr>');
+			});
+			
+			$.mobile.loading( 'hide');
+			$.unblockUI();
+		});
+		
+		request.fail(function( jqXHR, textStatus ) {
+				$.mobile.changePage($("#lost_connection_page"));
+			});
+	});
+	
+	$('#league_leaderboard_page').live('pageshow', function(event, ui){
+		$.blockUI({ message: null });
+		$.mobile.loading( 'show', {text: 'Loading',textVisible: true,theme: 'b',html: ""});
+		$('#Points_llbp').text(localStorage.getItem('points'));
+		var page_counter = 0;
+		var level = 0;
+		var request = $.ajax({
+			url: "http://modedawebtest.co.uk/myvote/api/leaderboard/league?id=" + localStorage.getItem('league_view'),
+			type: "GET",
+		});
+			
+		request.done(function( msg ) {
+			console.log(msg);
+			$('#lb1').html('');
+			$('#lb1').append('<tr class="heading1" style="background-color:#464646;color:white;border-color:#464646"><td style="width:20%;text-align:center;font-size:12px;">BADGE</td><td style="width:36%;text-align:center;font-size:12px;">PLAYER</td><td style="width:22%;text-align:center;font-size:12px;">ALL TIME SCORE</td><td style="width:22%;text-align:center;font-size:12px;">MONTHLY SCORE</td></tr>');
+			$.each(msg.leaderboard,function(i){
+				level = Math.floor((parseInt(msg.leaderboard[i].Points))/100);
+				$('#lb1').append('<tr style="background-color:white;color:black;"><td style="width:20%;text-align:center;font-size:12px;"><img src="images/Level' + level + '.png" /></td><td style="width:36%;text-align:center;font-size:12px;">' + msg.leaderboard[i].First_Name + '</td><td style="width:22%;text-align:center;font-size:12px;">' + msg.leaderboard[i].Points + '</td><td style="width:22%;text-align:center;font-size:12px;">' + msg.leaderboard[i].Points + '</td></tr>')
+			});
+			if(msg.next_page == false){
+				$('#pnext1').hide();
+			}
+			
+			$.mobile.loading( 'hide');
+			$.unblockUI();
+		});
+		
+		request.fail(function( jqXHR, textStatus ) {
+				$.mobile.changePage($("#lost_connection_page"));
+			});
+		
+		$('#pnext1').click(function(e){
+			$.blockUI({ message: null });
+			$.mobile.loading( 'show', {text: 'Loading',textVisible: true,theme: 'b',html: ""});
+			page_counter = page_counter + 1;
+			
+			var request = $.ajax({
+				url: "http://modedawebtest.co.uk/myvote/api/leaderboard/league?id=" + localStorage.getItem('league_view') + "&?page=" + page_counter,
+				type: "GET",
+			});
+			
+			request.done(function( msg ) {
+				console.log(msg);
+				$('#lb1').html('');
+				$('#lb1').append('<tr class="heading1" style="background-color:#464646;color:white;border-color:#464646"><td style="width:20%;text-align:center;font-size:12px;">BADGE</td><td style="width:36%;text-align:center;font-size:12px;">PLAYER</td><td style="width:22%;text-align:center;font-size:12px;">ALL TIME SCORE</td><td style="width:22%;text-align:center;font-size:12px;">MONTHLY SCORE</td></tr>');
+				$.each(msg.leaderboard,function(i){
+					level = Math.floor((parseInt(msg.leaderboard[i].Points))/100);
+					$('#lb1').append('<tr style="background-color:white;color:black;"><td style="width:20%;text-align:center;font-size:12px;"><img src="images/Level' + level + '.png" /></td><td style="width:36%;text-align:center;font-size:12px;">' + msg.leaderboard[i].First_Name + '</td><td style="width:22%;;text-align:center;font-size:12px;">' + msg.leaderboard[i].Points + '</td><td style="width:22%;text-align:center;font-size:12px;">' + msg.leaderboard[i].Points + '</td></tr>')
+				});
+				if(msg.next_page == false){
+					$('#pnext1').hide();
+				}
+				
+				$.mobile.loading( 'hide');
+				$.unblockUI();
+			});
+			
+			request.fail(function( jqXHR, textStatus ) {
+				$.mobile.changePage($("#lost_connection_page"));
+			});
+		});
+		
+		$('#pprev1').click(function(e){
+		$.blockUI({ message: null });
+		$.mobile.loading( 'show', {text: 'Loading',textVisible: true,theme: 'b',html: ""});
+		if(page_counter>0){
+			page_counter = page_counter - 1;
+			var url_ws = "http://modedawebtest.co.uk/myvote/api/leaderboard/league?id=" + localStorage.getItem('league_view');
+			
+			if(page_counter>0)
+			{
+				url_ws = url_ws + "&?page=" + page_counter;
+			} 
+			
+			var request = $.ajax({
+				url: url_ws,
+				type: "GET",
+			});
+			
+			request.done(function( msg ) {
+				console.log(msg);
+				$('#lb1').html('');
+				$('#lb1').append('<tr class="heading1" style="background-color:#464646;color:white;border-color:#464646"><td style="width:20%;text-align:center;font-size:12px;">BADGE</td><td style="width:36%;text-align:center;font-size:12px;">PLAYER</td><td style="width:22%;text-align:center;font-size:12px;">ALL TIME SCORE</td><td style="width:22%;text-align:center;font-size:12px;">MONTHLY SCORE</td></tr>');
+				$.each(msg.leaderboard,function(i){
+					level = Math.floor((parseInt(msg.leaderboard[i].Points))/100);
+					$('#lb1').append('<tr style="background-color:white;color:black;"><td style="width:20%;text-align:center;font-size:12px;"><img src="images/Level' + level + '.png" /></td><td style="width:36%;text-align:center;font-size:12px;">' + msg.leaderboard[i].First_Name + '</td><td style="width:22%;;text-align:center;font-size:12px;">' + msg.leaderboard[i].Points + '</td><td style="width:22%;text-align:center;font-size:12px;">' + msg.leaderboard[i].Points + '</td></tr>')
+				});
+				$('#pnext1').show();
+				
+				$.mobile.loading( 'hide');
+				$.unblockUI();
+			});
+			
+			request.fail(function( jqXHR, textStatus ) {
+				$.mobile.changePage($("#lost_connection_page"));
+			});
+		}
+		
+		else if(page_counter==0){
+			$.mobile.changePage($("#my_league"));
+		}
+		});
+	});
+	
+	$('#league_page').live('pageshow', function(event, ui){
+		$('#Points_lp').text(localStorage.getItem('points'));
+		$('#create_league_option').click(function(e){
+			$.mobile.changePage($("#create_league"),{ transition: "none" });
+		});
+		$('#join_league_option').click(function(e){
+			$.mobile.changePage($("#join_league"),{ transition: "none" });
+		});
+		$('#my_league_option').click(function(e){
+			$.mobile.changePage($("#my_league"),{ transition: "none" });
+		});
+	});
+	
+	$('#invite_credential_page').live('pageshow', function(event, ui){
+		$('#Points_icp').text(localStorage.getItem('points'));
+		$('#import_contact').click(function(e){
+			if($('#i_email').val()=="" || $('#i_password').val()){
+				alert('Please fill in all the details');
+			}
+			else{
+			var email_type = localStorage.getItem('mail_type');
+			
+			var str = "provider=" + email_type + "&email=" + $('#i_email').val() + "&password=" + $('#i_password').val();
+			
+			var request = $.ajax({
+				url: "http://modedawebtest.co.uk/myVote/api/invite",
+				type: "POST",
+				data: str
+			});
+			
+			request.done(function( msg ) {
+				var contacts_list = JSON.stringify(msg);
+				localStorage.setItem('contacts_list',contacts_list);
+				$.mobile.changePage($("#email_list_page"));
+				
+			});
+			
+			request.fail(function( jqXHR, textStatus ) {
+				$.mobile.changePage($("#lost_connection_page"));
+			});
+			}
+		});
+	});
+	
+	$('#email_list_page').live('pageshow', function(event, ui){
+		$.blockUI({ message: null });
+		$.mobile.loading( 'show', {text: 'Loading',textVisible: true,theme: 'b',html: ""});
+		$('#Points_elp').text(localStorage.getItem('points'));
+		var contact_list = JSON.parse(localStorage.getItem('contacts_list'));
+		
+		$.each(contact_list.email,function(i){
+			$('#eltable').append('<tr><td style="width:20%;"><input type="checkbox" id="checkbox' + i + '" /></td><td style="width:80%;"><p id="email' + i + '" style="font-size:12px;">' + contact_list.email[i] + '</p></td></tr>');
+		});
+		
+		$.mobile.loading( 'hide');
+		$.unblockUI();
+		$('#invite_contact').click(function(e){
+			var c_list = [];
+			$('#eltable p').each(function(i){
+				if($('#checkbox' + i).is(':checked')){
+					c_list.push($('#email' + i).text());
+				}
+			});
+			
+			var emails = JSON.stringify(c_list);
+			
+			alert(c_list);
+					$.ajax({
+            url: 'http://modedawebtest.co.uk/myVote/api/invite/send',
+            type: 'post',
+            dataType: 'json',
+			contentType: 'application/json',
+            success: function (data) {
+                console.log(data);
+				alert("Contacts Invited");
+				$.mobile.changePage($("#menu_page"));
+            },
+            data: emails
+        });
+			
+			/*request.done(function( msg ) {
+				console.log(msg);
+				if(msg.success == "0"){
+					alert(msg.message);
+				}
+			
+				else if(msg.success == "1"){
+					alert("Contacts Invited");
+					$.mobile.changePage($("#menu_page"));
+				}
+			});
+			
+			request.fail(function( jqXHR, textStatus ) {
+				$.mobile.changePage($("#lost_connection_page"));
+			});*/
+		});
+	});
+	
+	$('#lost_connection_page').live('pageshow', function(event, ui){
+		$('#Points_lcp').text(localStorage.getItem('points'));
+		$.mobile.loading( 'hide');
+		$.unblockUI();
+	});
+	
+	</script>
+
+	
+<style>
+body *{font-family:"Ubuntu";}
+
+#splash{
+	background: transparent url('U1/overallbck.png') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover; 
+}
+
+#splash img{
+}
+
+.Rhs div{ 
+	display:inline-block;
+	text-align:center;
+}
+
+#splash img#textonly{
+	-webkit-transform: scale(0.7);
+	-moz-transform: scale(0.7);
+	-o-transform: scale(0.7);
+	transform: scale(0.7);
+}
+
+#splash img{
+	position:absolute;
+}
+#splash img#bottlecircle, #splash img#textonly, #splash img#sport{
+	display:none;
+
+}
+
+#loginpage,#instruction_sm,#instruction_mix,#instruction_game,#instruction_league,#register,#menu_page,#register_page,#update_profile,#results_page,#premiership_select_page,#question_page,#leaderboard_page,#league_page,#create_league,#join_league,#question_one_page,#question_two_page,#question_three_page,#my_league,#league_leaderboard_page,#invite_page,#invite_credential_page,#email_list_page,#lost_connection_page{
+	background: transparent url('images/BackgroundFade.png') no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover; 
+}
+
+#charter_page
+{
+	background-color:white;
+}
+
+
+.ui-bar-a{
+	border: none !important;
+	background: #E0E0E0;
+	background-image: none !important;
+}
+
+.swipeleftimg{
+	width: 30%;
+}
+
+.ui-br{
+	border: none !important;
+}
+
+.question{
+	background:#FFF;
+	border-radius:10px;
+	padding:5px;
+	border-style:solid;
+	border-color:#b9d65c;	
+	margin-bottom:50px;
+}
+
+.question_r{
+	background:#D3D4D6;
+	border-radius:5px;
+	padding-right:5px;
+	padding-left:5px;
+	padding-top:1px;
+	padding-bottom:1px;
+}
+
+p.error { 
+	color: red;  
+	vertical-align: top; 
+	font-weight:bold
+}
+
+.points_d{
+	float:right;
+	color:black;
+	height:30px;
+}
+
+.display{
+	border-radius:5px;
+	padding-top: 10px;
+	padding-bottom: 20px;
+	width: 220px;
+	height:130px;
+}
+
+.display img{
+	width: 220px;
+	height:130px;
+}
+
+.btn_left{
+	display: inline-block;
+	float: left;
+	border-radius: 2px;
+	padding-left: 18%;
+	padding-right: 18%;
+	margin-left: -6%;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background: #FFF;
+	font-family: 'Ubuntu';
+	color: #000;
+	font-weight: normal;
+}
+
+.btn_right{
+	display: inline-block;
+	float: right;
+	border-radius: 2px;
+	padding-left: 18%;
+	padding-right: 24%;
+	padding-top: 10px;
+	margin-right: -6%;
+	padding-bottom: 10px;
+	background: #FFF;
+	font-family: 'Ubuntu';
+	color: #000;
+	font-weight: normal;
+}
+
+.btn_left_q{
+	display: inline-block;
+	font-size:10px;
+	float: left;
+	height:45px;
+	width:130px;
+	vertical-align: middle;
+	text-align:center;
+	line-height: 45px; 
+	margin-left: -8%;
+	background: #FFF;
+	font-family: 'Ubuntu';
+	color: #000;
+	margin-top:30px;	
+	border-style:solid;
+	border-color:#b9d65c;
+	border-radius:10px;
+	border-width:2px;
+}
+
+.btn_right_q{
+	display: inline-block;
+	font-size:10px;
+	float: right;
+	height:45px;
+	width:130px;
+	vertical-align: middle;
+	text-align:center;
+	line-height: 45px; 
+	margin-right: -8%;
+	background: #FFF;
+	font-family: 'Ubuntu';
+	color: #000;
+	margin-top:30px;	
+	border-style:solid;
+	border-color:#b9d65c;
+	border-radius:10px;
+	border-width:2px;
+}
+
+.tag_left{
+	display: inline-block;
+	font-size:12px;
+	float: left;
+	height:20px;
+	width:130px;
+	vertical-align: middle;
+	line-height: 20px; 
+	padding-left: 2%;
+	padding-right: 1%;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	background: #FFF;
+	font-family: 'Ubuntu';
+	color: #000;
+	font-weight: bold;
+	margin-top:4px;
+	margin-bottom:4px;	
+}
+
+.tag_left_done{
+	display: inline-block;
+	font-size:12px;
+	font-weight:100;
+	float: left;
+	height:20px;
+	width:130px;
+	vertical-align: middle;
+	line-height: 20px; 
+	padding-left: 2%;
+	padding-right: 1%;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	background: #464646;
+	font-family: 'Ubuntu';
+	color: #8F8F8F;
+	margin-top:4px;
+	margin-bottom:4px;	
+}
+
+.tag_right{
+	display: inline-block;
+	font-size:12px;
+	float: right;
+	height:20px;
+	width:130px;
+	vertical-align: middle;
+	line-height: 20px; 
+	padding-left: 2%;
+	padding-right: 1%;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	background: #FFF;
+	font-family: 'Ubuntu';
+	color: #000;
+	font-weight: bold;
+	margin-top:4px;
+	margin-bottom:4px;	
+}
+
+.tag_right_done{
+	display: inline-block;
+	font-size:12px;
+	font-weight:100;
+	float: right;
+	height:20px;
+	width:130px;
+	vertical-align: middle;
+	line-height: 20px; 
+	padding-left: 2%;
+	padding-right: 1%;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	background: #464646;
+	font-family: 'Ubuntu';
+	color: #8F8F8F;
+	margin-top:4px;
+	margin-bottom:4px;	
+}
+
+a{
+	text-decoration:none;
+	color: #000;
+}
+a.tappable-active {
+    color: #FFF;
+    background-color: #666;
+}
+
+.btn_left1{
+	display: inline-block;
+	float: left;
+	padding-left: 10%;
+	border-radius: 2px;
+	padding-right: 10%;
+	padding-top: 10px;
+	margin-left: -7%;
+	padding-bottom: 10px;
+	background: #FFF;
+	font-family: 'Ubuntu';
+	color: #000;
+	font-weight: normal;
+}
+
+.btn_right1{
+	display: inline-block;
+	float: right;
+	padding-left: 3%;
+	border-radius: 2px;
+	padding-right: 6%;
+	margin-right: -6%;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background: #FFF;
+	font-family: 'Ubuntu';
+	color: #000;
+	font-weight: normal;
+}
+
+.btn_left2{
+	display: inline-block;
+	float: left;
+	padding-left: 8%;
+	border-radius: 2px;
+	padding-right: 8%;
+	padding-top: 10px;
+	margin-left: -7%;
+	padding-bottom: 10px;
+	background: #FFF;
+	font-family: 'Ubuntu';
+	color: #000;
+	font-weight: normal;
+}
+
+.btn_right2{
+	display: inline-block;
+	float: right;
+	padding-left: 4%;
+	border-radius: 2px;
+	padding-right: 6%;
+	margin-right: -6%;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background: #FFF;
+	font-family: 'Ubuntu';
+	color: #000;
+	font-weight: normal;
+}
+
+.green_slide{
+	left:45%;
+	position:absolute;
+	background-image:url('U1/greenresultlarge.png');
+	background-repeat:no-repeat;
+	width: 25px;
+	height:50px;
+	border:none;
+	background-size: contain;
+}
+
+.box_rotate {
+  -webkit-transform: rotate(720deg);  /* Chrome, Safari 3.1+ */
+     -moz-transform: rotate(720deg);  /* Firefox 3.5-15 */
+      -ms-transform: rotate(720deg);  /* IE 9 */
+       -o-transform: rotate(720deg);  /* Opera 10.50-12.00 */
+          transform: rotate(720deg);  /* Firefox 16+, IE 10+, Opera 12.50+ */
+}
+.box_transition {
+  -webkit-transition: all 1.0s ease-out;  /* Chrome 1-25, Safari 3.2+ */
+     -moz-transition: all 1.0s ease-out;  /* Firefox 4-15 */
+       -o-transition: all 1.0s ease-out;  /* Opera 10.50–12.00 */
+          transition: all 1.0s ease-out;  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.50+ */
+}
+
+#charter_page .ui-radio{
+	width:45%;
+	float:left;
+	clear:none;
+	margin:2%;
+	margin-top:0;
+}
+
+#charter_page .ui-radio label{
+	border:none;
+}
+
+#charter_page .ui-radio *{
+	font-size:small;
+	font-weight:normal;
+	color:#6f8383
+}
+</style>
+</head>
+
+<body>
+
+	<!--Splash page -->
+	<div data-role="page" data-theme="d" id="splash"> 
+		<div class="splash">
+			
+			<img src="U1/gray.png" id="bottleleft" style="z-index:800;height:100px;display:none;"/>
+			<img src="U1/green.png" id="bottlecenter" style="z-index:900;height:100px;display:none;"/>
+			<img src="U1/gray.png" id="bottleright" style="z-index:800;height:100px;display:none;"/>
+					
+			<img src="U1/circlewhitesmall.png" id="bottlecircle" style="height:190px;"/>
+			<img src="U1/textonly.png" id="textonly" style="height:39px"/>
+			<img src="images/sport.png" id="sport" style="height:115px"/>	
+		</div>
+	</div>
+	
+	<!--Login page -->
+    <div data-role="page" id="loginpage" data-theme="d">
+        <div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" style="height: 30px;" />
+			<img src="images/PointsDisplaycopy5.png" style="float:right;height: 30px;" />
+        </div>
+		<div data-role="content">
+			<div style="padding-top:60px;">
+			<center><img src="images/SigninWithFacebookTw.png" id="loginfb" onclick="doFBLogin()"></center>
+			</div>
+			
+			<div style="padding-top:40px;">
+			<center><img src="images/Shape-4-copy-2.png" /></center>
+			</div>
+			
+			<div>
+				<center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:18px;">OR</p></center>
+				<center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:18px;">SIGN IN WITH EMAIL</p></center>
+			</div>
+			
+			<form id="loginForm">
+			<fieldset data-role="fieldcontain">
+				<center><input type="text" name="txtEmail" id="txtEmail" value="" class="required email" placeholder="enter your email address"/></center>
+			</fieldset>
+			<center><p id="error_txtEmail" class="error"></p></center>
+			
+			<fieldset data-role="fieldcontain">
+				<center><input type="password" name="txtPassword" id="txtPassword" value="" class="formField required" placeholder="enter your password"/></center>
+			</fieldset>
+			</form>
+			<div>
+			<center><a href="#"><img src="images/continue.png" id="lp_continue" /></a></center>
+			</div>
+        </div>
+		<div id="fb-root"></div>
+	</div>
+	
+	<script>
+			//initialize settings  
+	window.fbAsyncInit = function() {  
+		FB.init({  
+			appId: '212701962263449', //appId of your Facebook app  
+			status: true,   
+			cookie: true,  
+			xfbml: true,  
+			oauth: true  
+		});  
+	};  
+	(function(){var e=document.createElement('script');e.async=true;e.src=document.location.protocol+'//connect.facebook.net/en_US/all.js';document.getElementById('fb-root').appendChild(e);}());  
+	function doFBLogin() {  
+		FB.login(function(response) {  
+			if (response.authResponse) {  
+				var token = response.authResponse.accessToken;  
+				getUserInfo();
+			} else {  
+				console.log('Authorization failed.');
+			}  
+		}, {scope:'email,user_birthday'});  
+	//scope – the set of fields we received from the server when login  
+	}  
+
+	function getUserInfo(){
+		FB.api('/me', function(response) {
+		
+			var firstname,lastname,gender,dob,email,city,state,country;
+			if(response.first_name){
+				var firstname = response.first_name;
+			}
+			
+			if(response.last_name){
+				var lastname = response.last_name;
+			}
+			
+			if(response.gender){
+				if(response.gender=="male")
+				{
+					var sex = "0";
+				}
+				else if(response.gender=="female")
+				{
+					var sex = "1";
+				}
+			}
+			
+			if(response.birthday){
+				var dob = response.birthday;
+			}
+			
+			if(response.email){
+				var email = response.email;
+			}
+			
+			if(response.location.name){
+				var location = response.location.name;
+				var locations = location.split(", "); 
+				var city = locations[0];
+				var state = locations[1];
+				var country = locations[2];
+			}
+			
+			var str = "&firstname=" + firstname + "&lastname=" + lastname + "&sex=" + sex + "&dob=" + dob + "&email=" + email + "&city=" + city + "&state=" + state + "&country=" + country + "&login_type=2";
+		
+			var request = $.ajax({
+				url: "http://modedawebtest.co.uk/myvote/api/user/register",
+				type: "POST",
+				data: str
+			});
+		
+			request.done(function( msg ) {
+				console.log(msg);
+				if(msg.user_id == -1){
+					alert("Server Error. Please try again");
+				}
+			
+				else{
+					localStorage.setItem('user_id', msg.user_id);
+					localStorage.setItem('logged_in','1');
+					id = localStorage.getItem('user_id');
+						var request = $.ajax({
+						url: "http://modedawebtest.co.uk/myvote/api/answer/points?id=" + id,
+						type: "GET"
+					});
+		
+					request.done(function( msg ) {
+					console.log(msg);
+					localStorage.setItem('points',msg[0].Points);
+					$.mobile.changePage($("#menu_page"));
+					});
+				}
+			});
+ 
+			request.fail(function( jqXHR, textStatus ) {
+				alert( "Request failed: " + textStatus );
+			});
+			});
+	}
+	</script>
+	
+	<!-- Mix Instruction page -->
+	<div data-role="page" id="instruction_mix" data-theme="d">
+        <div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" style="height: 30px;"/>
+			<img src="images/PointsDisplaycopy5.png" style="float:right;height: 30px;" />
+        </div>
+		<div data-role="content">
+			<div>
+				<center><img src="images/IN-THE-CROWD.png" style="padding-top:40px;" /></center>
+				<center><img src="images/Shape-3-copy.png" style="padding-top:20px;" /></center>
+				<center><img src="images/OUT-OF-THE-CROWD.png" style="padding-top:20px;" /></center>
+				<center><p style="color:#7e7e7e; font-family: 'Ubuntu';padding-top:20px;font-size:16px;font-weight:bold;">WHERE DOES YOUR VOTE STAND</p><center>
+				<center><p style="color:#7e7e7e; font-family: 'Ubuntu';padding-top:30px;font-size:small; text-align:justify;font-size:10px;font-weight:bold;padding-right:25px;padding-left:25px;">MY Vote SPORT is a social voting game where you get to have your say on the biggest sporting debates. It's about where your vote stands amongst the public - are you in or out of the crowd.</p></center>
+			</div>
+        </div>
+		<div data-role="footer" style="background:transparent;">
+			<center><img src="images/swipe-left-copy.png" style="padding-top:50px;"/></center>
+		</div>
+	</div>
+	
+	<!-- Game Instruction page -->
+	<div data-role="page" id="instruction_game" data-theme="d">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" style="height: 30px;"/>
+			<img src="images/PointsDisplaycopy5.png" style="float:right;height: 30px;" />
+        </div>
+        <div data-role="content" style="padding: 10px;">
+			<center><img src="images/Layer-3.png" style="padding-top:60px;" /></center>
+			<center><img src="images/Shape-4-copy-2.png" style="padding-top:50px;" /></center>
+			<center><p style="color:#7e7e7e; font-family: 'Ubuntu';font-size:16px;font-weight:bold;">THE CROWD COINS SCORING SYSTEM</p></center>
+			<center><p style="color:#7e7e7e; font-family: 'Ubuntu';font-size:small; text-align:justify;font-size:10px;font-weight:bold;padding-right:25px;padding-top:30px;padding-left:25px;">Every time you guess correctly whether you're in the majority or the minority of voters, you're in the crowd or out of the crowd, you win 2 Crowd Coins.</p></center>
+			<center><p style="color:#7e7e7e; font-family: 'Ubuntu';font-size:small; text-align:justify;font-size:10px;font-weight:bold;padding-right:25px;padding-left:25px;">If you get it wrong, you lose 1 Coin.</p></center>
+        </div>
+		
+		<div data-role="footer" style="background:transparent;">
+			<center><img src="images/swipe-left-copy.png" style="padding-top:50px;" /></center>
+		</div>
+	</div>
+	
+	<div data-role="page" id="instruction_game_play" data-theme="d">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" style="height: 30px;"/>
+			<img src="images/PointsDisplaycopy5.png" style="float:right;height: 30px;" />
+        </div>
+        <div data-role="content" style="padding: 10px;">
+			<center><img src="images/Layer-4.png" style="padding-top:60px;" /></center>
+			<center><img src="images/Shape-4-copy-2.png" style="padding-top:60px;" /></center>
+			<center><p style="color:#7e7e7e; font-family: 'Ubuntu';font-size:16px;font-weight:bold;">WHO KNOWS THE CROWD SENSE</p></center>
+			<center><p style="color:#7e7e7e; font-family: 'Ubuntu';font-size:small; text-align:justify;font-size:10px;font-weight:bold;padding-right:25px;padding-top:30px;padding-left:25px;">Find out who understands the crowd's mood and who doesn't by setting up a league and playing against your friends.</p></center>
+        </div>
+		
+		<div data-role="footer" style="background:transparent;">
+			<center><img src="images/swipe-left-copy.png" style="padding-top:70px;" /></center>
+		</div>
+	</div>
+	
+	<div data-role="page" id="instruction_rewards" data-theme="d">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" style="height: 30px;"/>
+			<img src="images/PointsDisplaycopy5.png" style="float:right;height: 30px;" />
+        </div>
+        <div data-role="content" style="padding: 10px;">
+			<center><p style="color:#7e7e7e; font-family: 'Ubuntu';font-size:16px;font-weight:bold;padding-top:230px;">EARN REWARDS</p></center>
+			<center><p style="color:#7e7e7e; font-family: 'Ubuntu';font-size:small; text-align:justify;font-size:10px;font-weight:bold;padding-right:25px;padding-top:30px;padding-left:25px;">Make your way up the ranks by winning badges for your profile. As you earn Crowd Coins, you can exchange them for sponsored products and rewards.</p></center>
+        </div>
+		
+		<div data-role="footer" style="background:transparent;">
+			<center><img src="images/swipe-left-copy.png" style="padding-top:70px;" /></center>
+		</div>
+	</div>
+	
+	<!-- Email Register Page -->
+	<div data-role="page" id="register_page">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" style="height: 30px;"/>
+			<img src="images/PointsDisplaycopy5.png" style="float:right;height: 30px;" />
+        </div>
+		<div data-role="content">	
+			<div style="margin-top:-20px;">
+				<center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:16px;">NAME</p></center>
+				<center><input type="text" name="name" id="name" value="" class="formField required" /></center>
+				<center><img src="images/Shape-4-copy-2.png" /></center>
+			</div>
+			
+			<div style="margin-top:-5px;">
+				<center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:16px;">D.O.B</p></center>
+				<center><input type="date" name="dob" id="dob" value="" class="formField required" /></center>
+				<center><img src="images/Shape-4-copy-2.png" /></center>
+			</div>
+			
+			<div style="margin-top:-5px;">
+				<center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:16px;">SEX</p></center>
+				<center><fieldset data-role="controlgroup" data-type="horizontal" >
+								<input type="radio" name="sex" id="male" value="0" />
+								<label for="male">Male</label>
+
+								<input type="radio" name="sex" id="female" value="1"  />
+								<label for="female">Female</label>
+							</fieldset></center>
+				<center><img src="images/Shape-4-copy-2.png" /></center>
+			</div>
+			
+			<div style="margin-top:-5px;">
+				<center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:16px;">LOCATION</p></center>
+				<center><input type="text" name="city" id="city" value="" class="formField required" /></center>
+				<center><img src="images/Shape-4-copy-2.png" /></center>
+			</div>
+			
+			<div>
+			<center><a href="#"><img src="images/continue.png" id="rp_continue" /></a></center>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Menu Page -->
+	
+	<div data-role="page" id="menu_page">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" style="height: 30px;"/>
+			<div class="points_d">
+			<table style="height:34px;margin-top:-15%;">
+					<tr><td>
+						<p id="Points_mp" style="font-size:16px;"></p>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 34px;" />
+					</td></tr>
+				</table>
+			</div>
+        </div>
+		<div data-role="content" style="float:right; padding-right:0;">
+			<div>
+			<a href="#"><img src="images/Profile.png" id="profile_option"></a>
+			<a href="#"><img src="images/Game.png" id="game_option"></a>
+			<a href="#"><img src="images/Premiership-Game.png" id="premiership_select_option"></a>
+			<a href="#"><img src="images/Results.png" id="results_option"></a>
+			<a href="#"><img src="images/League.png" id="league_option"></a>
+			<a href="#"><img src="images/Invite.png" id="invite_option"></a>
+			<img src="images/Rewards.png" id="rewards_option">
+			</div>
+		</div>
+	</div>
+	
+	<!-- Question 1 page -->
+	<div data-role="page" id="question_one_page" data-theme="d">
+        <div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" style="height: 30px;" />
+			<div class="points_d">
+			<table>
+					<tr><td>
+						<h2 id="Points_q1" style="font-size:16px;margin-bottom:150%;"></h2>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 30px;padding-bottom: 30px;" />
+					</td></tr>
+				</table>
+			</div>
+        </div>
+		<div data-role="content">
+			<center><div id="display_q1" class="display"></div></center>
+			<div id="Question_B3"><center><table width="100%" height="100%" align="center" valign="center" class="question">
+					<tr><td width="20%">
+						<div id="icon_q1">
+						</div>
+					<td width="80%">
+						<b><p id="q1_question" style="font-family: 'Ubuntu';font-size:14px;"></p></b>
+					</td></tr>
+				</table></center></div>
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="btn_left_q" id="q1_yes">YES</p></a>
+				<a href="#"><p class="btn_right_q" id="q1_no">NO</p></a>
+			</div>
+			
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="btn_left_q" id="q1_in_crowd">IN THE CROWD</p></a>
+				<a href="#"><p class="btn_right_q" id="q1_out_crowd">OUT OF THE CROWD</p></a>
+			</div>
+        </div>
+	</div>
+	
+	<!-- Question 2 page -->
+	<div data-role="page" id="question_two_page" data-theme="d">
+        <div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" style="height: 30px;" />
+			<div class="points_d">
+			<table>
+					<tr><td>
+						<h2 id="Points_q2" style="font-size:16px;margin-bottom:150%;"></h2>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 30px;padding-bottom: 30px;" />
+					</td></tr>
+				</table>
+			</div>
+        </div>
+		<div data-role="content">
+			<center><div id="display_q2" class="display"></div></center>
+			<div id="Question_B3"><center><table width="100%" height="100%" align="center" valign="center" class="question">
+					<tr><td width="20%">
+						<div id="icon_q2">
+						</div>
+					<td width="80%">
+						<b><p id="q2_question" style="font-family: 'Ubuntu';font-size:14px;"></p></b>
+					</td></tr>
+				</table></center></div>
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="btn_left_q" id="q2_yes">YES</p></a>
+				<a href="#"><p class="btn_right_q" id="q2_no">NO</p></a>
+			</div>
+			
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="btn_left_q" id="q2_in_crowd">IN THE CROWD</p></a>
+				<a href="#"><p class="btn_right_q" id="q2_out_crowd">OUT OF THE CROWD</p></a>
+			</div>
+        </div>
+        </div>
+	</div>
+	
+	<!-- Question 3 page -->
+	<div data-role="page" id="question_three_page" data-theme="d">
+        <div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" style="height: 30px;" />
+			<div class="points_d">
+			<table>
+					<tr><td>
+						<h2 id="Points_q3" style="font-size:16px;margin-bottom:150%;"></h2>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 30px;padding-bottom: 30px;" />
+					</td></tr>
+				</table>
+			</div>
+        </div>
+		<div data-role="content">
+			<center><div id="display_q3" class="display"></div></center>
+			<div id="Question_B3"><center><table width="100%" height="100%" align="center" valign="center" class="question">
+					<tr><td width="20%">
+						<div id="icon_q3">
+						</div>
+					<td width="80%">
+						<b><p id="q3_question" style="font-family: 'Ubuntu';font-size:14px;"></p></b>
+					</td></tr>
+				</table></center></div>
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="btn_left_q" id="q3_yes">YES</p></a>
+				<a href="#"><p class="btn_right_q" id="q3_no">NO</p></a>
+			</div>
+			
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="btn_left_q" id="q3_in_crowd">IN THE CROWD</p></a>
+				<a href="#"><p class="btn_right_q" id="q3_out_crowd">OUT OF THE CROWD</p></a>
+			</div>
+        </div>
+        </div>
+	</div>
+
+	<!-- Question page -->
+	<div data-role="page" id="question_page" data-theme="d">
+        <div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" style="height: 30px;" />
+			<div class="points_d">
+			<table>
+					<tr><td>
+						<h2 id="Points_q" style="font-size:16px;margin-bottom:150%;"></h2>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 30px;padding-bottom: 30px;" />
+					</td></tr>
+				</table>
+			</div>
+        </div>
+		
+		<div data-role="content">
+			<center><div id="display_q" class="display"></div></center>
+			<div id="Question_B3"><center><table width="100%" height="100%" align="center" valign="center" class="question">
+					<tr><td width="20%">
+						<div id="icon_q">
+							<img src="images/American Football.png" />
+						</div>
+					<td width="80%">
+						<b><p id="q_question" style="font-family: 'Ubuntu';font-size:14px;"></p></b>
+					</td></tr>
+				</table></center></div>
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="btn_left_q" id="q_yes">YES</p></a>
+				<a href="#"><p class="btn_right_q" id="q_no">NO</p></a>
+			</div>
+			
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="btn_left_q" id="q_in_crowd">IN THE CROWD</p></a>
+				<a href="#"><p class="btn_right_q" id="q_out_crowd">OUT OF THE CROWD</p></a>
+			</div>
+				
+		</div>
+		
+	</div>
+	
+	<script>
+		function editContent(num){
+			var str = $('#l' + num).text();
+			$('#p' + num).html('');
+			if(str=="empty"){
+				$('#p' + num).append( '<input type="text" name="t' + num + '" id="t' + num + '"></input>' );
+			}
+			else{
+				$('#p' + num).append( '<input type="text" value="' + str + '" name="t' + num + '" id="t' + num + '"></input>' );
+			}
+			$('#e' + num).show();
+		}
+		
+		function updateContent(num){
+		if($('#t' + num).val()){
+			if(num<=4){
+			var id = localStorage.getItem('user_id');
+			var str = "user_id=" + id;
+			var temp;
+			
+			if(num == "1"){
+				str = str + "&firstname=" + $('#t1').val();
+				temp = $('#t1').val();
+			}
+			
+			if(num == "2"){
+				str = str + "&dob=" + $('#t2').val();
+				temp = $('#t2').val();
+			}
+			
+			if(num == "4"){
+				str = str + "&city=" + $('#t4').val();
+				temp = $('#t4').val();
+			}
+			
+			var request = $.ajax({
+				url: "http://modedawebtest.co.uk/myvote/api/user/update",
+				type: "POST",
+				data: str
+			});
+		
+			request.done(function( msg ) {
+				console.log(msg);
+				if(msg.success == -1){
+					alert("Please Fill Proper Details");
+				}
+			
+				else{
+					$('#p' + num).html('');
+					$('#p' + num).append('<a href="#" id="l' + num + '" onclick="editContent(' + num + ')" style="color:black;">' + temp + '</a>');
+					$('#e' + num).hide();
+				}
+			});
+ 
+			request.fail(function( jqXHR, textStatus ) {
+				alert( "Request failed: " + textStatus );
+			});
+			}
+			
+			if(num>4){
+			var id = localStorage.getItem('user_id');
+			var str = "user_id=" + id;
+			var temp;
+			
+			if(num == "5"){
+				str = str + "&fav_teamsport=" + $('#t5').val();
+				temp = $('#t5').val();
+			}
+			
+			if(num == "6"){
+				str = str + "&fav_sportsteam=" + $('#t6').val();
+				temp = $('#t6').val();
+			}
+			
+			if(num == "7"){
+				str = str + "&fav_isportsteam=" + $('#t7').val();
+				temp = $('#t7').val();
+			}
+			
+			if(num == "8"){
+				str = str + "&fav_indisport=" + $('#t8').val();
+				temp = $('#t8').val();
+			}
+			
+			if(num == "9"){
+				str = str + "&fav_sportindi=" + $('#t9').val();
+				temp = $('#t9').val();
+			}
+			
+			if(num == "10"){
+				str = str + "&fav_premierteam=" + $('#t10').val();
+				temp = $('#t10').val();
+			}
+			
+			var request = $.ajax({
+				url: "http://modedawebtest.co.uk/myvote/api/user/profile",
+				type: "POST",
+				data: str
+			});
+		
+			request.done(function( msg ) {
+				console.log(msg);
+				if(msg.success == -1){
+					alert("Please Fill Proper Details");
+				}
+			
+				else{
+					$('#p' + num).html('');
+					$('#p' + num).append('<a href="#" id="l' + num + '" onclick="editContent(' + num + ')" style="color:black;">' + temp + '</a>');
+					$('#e' + num).hide();
+				}
+			});
+ 
+			request.fail(function( jqXHR, textStatus ) {
+				alert( "Request failed: " + textStatus );
+			});
+			}
+		}
+		
+		else{
+			alert("The value cannot be empty");
+		}
+		}
+	</script>
+	
+	<style>
+	img{
+	max-width: 100%;
+	height: auto;
+	width: auto; /* ie8 */
+	}
+	</style>
+	<!-- Update Profile page -->
+	<div data-role="page" id="update_profile">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" class="menulink" style="height: 30px;"/>
+			<div class="points_d">
+			<table style="height:34px;margin-top:-15%;">
+					<tr><td>
+						<p id="Points_up" style="font-size:16px;"></p>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 34px;" />
+					</td></tr>
+				</table>
+			</div>
+		</div>
+		<div data-role="content">
+			
+			<div style="float:right;">
+				<p style="color:#6f8383; font-family: 'Ubuntu';font-size:10px;margin-top:-10px;margin-right:10px;">points redeemed : 0</p>
+				<p id="prem" style="color:#6f8383; font-family: 'Ubuntu';font-size:10px;margin-top:-10px;margin-right:10px;"></p>
+			</div>
+			<div style="clear:both"></div>
+			<div>
+				<table>
+				<tr>
+					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Name:</td>
+					<td width="55%" align="left" valign="middle" id="p1" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l1" onclick="editContent('1')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e1" onclick="updateContent('1')" style="display:none;color:green;">edit</a></td>
+				</tr>
+				
+				<tr>
+					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Date of birth:</td>
+					<td width="55%" align="left" valign="middle"  id="p2" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l2" onclick="editContent('2')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e2" onclick="updateContent('2')" style="display:none;color:green;">edit</a></td>
+				</tr>
+				
+				<tr>
+					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Sex:</td>
+					<td width="55%" align="left" valign="middle" id="p3" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l3" onclick="editContent('3')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e3" onclick="updateContent('3')" style="display:none;color:green;">edit</a></td>
+				</tr>
+				
+				<tr>
+					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Location:</td>
+					<td width="55%" align="left" valign="middle" id="p4" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l4" onclick="editContent('4')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e4" onclick="updateContent('4')" style="display:none;color:green;">edit</a></td>
+				</tr>
+				
+				<tr>
+					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Favourite team sport:</td>
+					<td width="55%" align="left" valign="middle" id="p5" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l5" onclick="editContent('5')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e5" onclick="updateContent('5')" style="display:none;color:green;">edit</a></td>
+				</tr>
+				
+				<tr>
+					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Favourite sports team:</td>
+					<td width="55%" align="left" valign="middle" id="p6" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l6" onclick="editContent('6')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e6" onclick="updateContent('6')" style="display:none;color:green;">edit</a></td>
+				</tr>
+				
+				<tr>
+					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Favourite international sports team:</td>
+					<td width="55%" align="left" valign="middle" id="p7" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l7" onclick="editContent('7')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e7" onclick="updateContent('7')" style="display:none;color:green;">edit</a></td>
+				</tr>
+				
+				<tr>
+					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Favourite individual sport:</td>
+					<td width="55%" align="left" valign="middle" id="p8" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l8" onclick="editContent('8')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e8" onclick="updateContent('8')" style="display:none;color:green;">edit</a></td>
+				</tr>
+				
+				<tr>
+					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Favourite sport individual:</td>
+					<td width="55%" align="left" valign="middle" id="p9" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l9" onclick="editContent('9')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e9" onclick="updateContent('9')" style="display:none;color:green;">edit</a></td>
+				</tr>
+				
+				<tr>
+					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Favourite Premiership football team:</td>
+					<td width="55%" align="left" valign="middle" id="p10" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l10" onclick="editContent('10')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e10" onclick="updateContent('10')" style="display:none;color:green;">edit</a></td>
+				</tr>
+				
+				<tr>
+					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;"><a href="#"><p id="logout" style="color:#6f8383;">Log Out</p></a></td>
+				</tr>
+				
+				</table>
+			</div>
+		
+			<div>
+				<p style="color:#353535; font-family: 'Ubuntu';font-size:12px;padding-left:10px;">Badges:</p>
+			</div>
+			<div style="clear:both"></div>
+			<div>
+				<img src="images/Level0.png" id="level1" style="padding-left:5px;" />
+				<img src="images/Level0.png" id="level2" style="padding-left:2px;" />
+				<img src="images/Level0.png" id="level3" style="padding-left:2px;" />
+				<img src="images/Level0.png" id="level4" style="padding-left:2px;" />
+				<img src="images/Level0.png" id="level5" style="padding-left:2px;" />
+				<img src="images/Level0.png" id="level6" style="padding-left:2px;" />
+				<img src="images/Level0.png" id="level7" style="padding-left:2px;" />
+				<img src="images/Level0.png" id="level8" style="padding-left:2px;" />
+				<img src="images/Level0.png" id="level9" style="padding-left:2px;" />
+				<img src="images/Level0.png" id="level10" style="padding-left:2px;" />
+			</div>
+			<div style="clear:both"></div>
+			<div>
+				<img src="images/Level0.png" style="padding-left:5px;" />
+				<img src="images/Level0.png" style="padding-left:2px;" />
+				<img src="images/Level0.png" style="padding-left:2px;" />
+				<img src="images/Level0.png" style="padding-left:2px;" />
+				<img src="images/Level0.png" style="padding-left:2px;" />
+				<img src="images/Level0.png" style="padding-left:2px;" />
+				<img src="images/Level0.png" style="padding-left:2px;" />
+				<img src="images/Level0.png" style="padding-left:2px;" />
+				<img src="images/Level0.png" style="padding-left:2px;" />
+				<img src="images/Level0.png" style="padding-left:2px;" />
+			</div>
+		</div>
+	</div>
+	
+	<!-- Charter Page -->
+	<div data-role="page" id="charter_page">
+		<div data-role="content">
+			<center><img src="images/my_vote.png"></center>
+			<center><p style="color:#939699;font-family: 'Ubuntu';font-size:14;padding-top:10px;">RESPECT CHARTER</p></center>
+			<center><img src="images/Shape-4-copy-2.png"></center>
+			<br/><br/><br/><br/><br/><br/><center><img src="images/Shape-4-copy-2.png" style="padding-bottom:10px;"></center>
+			<center>
+				
+				<input type="radio" name="charter" id="agree" value="0" style="background-color:white;" />
+				<label for="agree">Agree</label>
+				<input type="radio" name="charter" id="disagree" value="1"  />
+				<label for="disagree">Disagree</label>
+					
+				<!-- <fieldset data-role="controlgroup" data-mini="true">
+					<input type="radio" name="charter" id="agree" value="0" />
+					<label for="agree">AGREE</label>
+
+					<input type="radio" name="charter" id="disagree" value="1"  />
+					<label for="disagree">DISAGREE</label>
+				</fieldset> -->
+			</center>
+			</br></br><center><img src="images/swipe-left-copy.png" /></center>
+		</div>
+	</div>
+	
+	<script>
+		function getQuestion(team){
+			if(!(localStorage.getItem('t' + team))){
+				localStorage.setItem('current_team',team);
+				$.mobile.changePage("#question_page");
+			}
+		}
+	</script>
+	
+	<!-- Premiership Question Select Page -->
+	<div data-role="page" id="premiership_select" style="font-size:small;">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" class="menulink" style="height: 30px;" />
+			<div class="points_d">
+			<table style="height:34px;margin-top:-15%;">
+					<tr><td>
+						<p id="Points_psp" style="font-size:16px;"></p>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 34px;" />
+					</td></tr>
+				</table>
+			</div>
+		</div>
+		
+		<div data-role="content">
+			<div>
+				<center><h3 style="color:#000; font-family: 'Ubuntu'; font-weight: bold;">Team Vote</h3></center>
+			</div>
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="tag_left" id="t1" onclick="getQuestion('1')"></p></a>
+				<a href="#"><p class="tag_right" id="t11" onclick="getQuestion('11')"></p></a>
+			</div>
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="tag_left" id="t2" onclick="getQuestion('2')"></p></a>
+				<a href="#"><p class="tag_right" id="t12" onclick="getQuestion('12')"></p></a>
+			</div>
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="tag_left" id="t3" onclick="getQuestion('3')"></p></a>
+				<a href="#"><p class="tag_right" id="t13" onclick="getQuestion('13')"></p></a>
+			</div>
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="tag_left" id="t4" onclick="getQuestion('4')"></p></a>
+				<a href="#"><p class="tag_right" id="t14" onclick="getQuestion('14')"></p></a>
+			</div>
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="tag_left" id="t5" onclick="getQuestion('5')"></p></a>
+				<a href="#"><p class="tag_right" id="t15" onclick="getQuestion('15')"></p></a>
+			</div>
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="tag_left" id="t6" onclick="getQuestion('6')"></p></a>
+				<a href="#"><p class="tag_right" id="t16" onclick="getQuestion('16')"></p></a>
+			</div>
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="tag_left" id="t7" onclick="getQuestion('7')"></p></a>
+				<a href="#"><p class="tag_right" id="t17" onclick="getQuestion('17')"></p></a>
+			</div>
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="tag_left" id="t8" onclick="getQuestion('8')"></p></a>
+				<a href="#"><p class="tag_right" id="t18" onclick="getQuestion('18')"></p></a>
+			</div>
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="tag_left" id="t9" onclick="getQuestion('9')"></p></a>
+				<a href="#"><p class="tag_right" id="t19" onclick="getQuestion('19')"></p></a>
+			</div>
+			<div style="clear:both"></div>
+			<div>
+				<a href="#"><p class="tag_left" id="t10" onclick="getQuestion('10')"></p></a>
+				<a href="#"><p class="tag_right" id="t20" onclick="getQuestion('20')"></p></a>
+			</div>
+		</div>
+		
+		<div data-role="footer" style="background:transparent;">
+			<center><img src="images/Footer_Cup.png" /></center>
+		</div>
+	</div>
+	
+	<style>
+			div.resultrow,div.resultrowheading{
+				display:block;
+				clear:both;
+				border-radius: 7px;
+				padding-top:10px;
+			}
+			div.resultrow>div{
+				float:left;
+				text-align:center;
+				display:none;
+			}
+			
+			
+			div.resultrow>div>.votedin{
+				width:60px;
+			}
+		</style>
+	<!-- Results page -->
+	<div data-role="page" id="results_page" style="font-size:small;">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" class="menulink" style="height: 30px;" />
+			<div class="points_d">
+			<table style="height:34px;margin-top:-15%;">
+					<tr><td>
+						<p id="Points_rp" style="font-size:16px;"></p>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 34px;" />
+					</td></tr>
+				</table>
+			</div>
+		</div>
+		
+		<div data-role="content">
+			<div id="q1_tab" class="ui-header ui-bar-a resultrowheading" style="padding: 5px;display:none;"><span id="q1" style="color:black;font-weight:normal;"></span></div>
+			<div class="resultrow">
+			<div id="r1" style="width:50%;">
+						<div class="greenyes" style="margin: 0 auto;background-image:url('images/greenresultlarge.png');background-repeat:no-repeat;width:24px;height:58px;border:none;"></div>
+						<div class="grayno" style="margin: 0 auto;background-image:url('images/grayresultlarge.png');display:none;background-repeat:no-repeat;width:24px;height:58px;border:none;"></div>
+						<div style="margin: 0 auto;font-size:small;">YES</div>
+						<div></div>
+			</div>
+			<div id="r2" style="width:50%;">
+				<div style="margin: 0 auto;background-image:url('images/greenresultlarge.png');background-repeat:no-repeat;width:24px;height:58px;border:none;">
+					<div style="margin: 0 auto;background-image:url('images/grayresultlarge.png');background-repeat:no-repeat;width:24px;height:58px;position:absolute;border:none;"></div>
+				</div>
+				<div style="margin: 0 auto;text-align:center;font-size:x-small;" class="votedin">64% CROWD VOTED IN</div>
+			</div>
+			</div>
+
+			<div id="q2_tab" class="ui-header ui-bar-a resultrowheading" style="padding: 5px;display:none;"><span id="q2" style="color:black;font-weight:normal"></span></div>
+			<div class="resultrow">
+			<div id="r11" style="width:50%">
+						<div class="greenyes" style="margin: 0 auto;background-image:url('images/greenresultlarge.png');background-repeat:no-repeat;width:24px;height:58px;border:none;"></div>
+						<div class="grayno" style="margin: 0 auto;background-image:url('images/grayresultlarge.png');display:none;background-repeat:no-repeat;width:24px;height:58px;border:none;"></div>
+						<div style="margin: 0 auto;font-size:small;">YES</div>
+						<div></div>
+			</div>
+			<div id="r12" style="width:50%">
+				<div style="margin: 0 auto;background-image:url('images/greenresultlarge.png');background-repeat:no-repeat;width:24px;height:58px;border:none;">
+					<div style="margin: 0 auto;background-image:url('images/grayresultlarge.png');background-repeat:no-repeat;width:24px;height:58px;position:absolute;border:none;"></div>
+				</div>
+				<div style="margin: 0 auto;text-align:center;font-size:x-small;" class="votedin">64% CROWD VOTED IN</div>
+			</div>
+			</div>
+			
+			<div id="q3_tab" class="ui-header ui-bar-a resultrowheading" style="padding: 5px;display:none;"><span id="q3" style="color:black;;font-weight:normal;"></span></div>
+			<div class="resultrow">
+			<div id="r21" style="width:50%">
+						<div class="greenyes" style="margin: 0 auto;background-image:url('images/greenresultlarge.png');background-repeat:no-repeat;width:24px;height:58px;border:none;"></div>
+						<div class="grayno" style="margin: 0 auto;background-image:url('images/grayresultlarge.png');display:none;background-repeat:no-repeat;width:24px;height:58px;border:none;"></div>
+						<div style="margin: 0 auto;font-size:small;">YES</div>
+						<div></div>
+			</div>
+			<div id="r22" style="width:50%">
+				<div style="margin: 0 auto;background-image:url('images/greenresultlarge.png');background-repeat:no-repeat;width:24px;height:58px;border:none;">
+					<div style="margin: 0 auto;background-image:url('images/grayresultlarge.png');background-repeat:no-repeat;width:24px;height:58px;position:absolute;border:none;"></div>
+				</div>
+				<div style="margin: 0 auto;text-align:center;font-size:x-small;" class="votedin">64% CROWD VOTED IN</div>
+			</div>
+			</div>
+		</div>
+			
+	</div>
+	
+	<style>
+		.heading{
+			float:left;
+			width:110%;
+			height:20px;
+			margin-left:-5%;
+			display:table;
+			padding:2px;
+		}
+		.heading1{
+			height:20px;
+			padding:2px;
+		}
+
+	</style>
+	
+	<div data-role="page" id="leaderboard_page" style="font-size:small;">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" class="menulink" style="height: 30px;" />
+			<div class="points_d">
+			<table>
+					<tr><td>
+						<h2 id="Points_lbp" style="font-size:16px;margin-bottom:150%;"></h2>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 30px;padding-bottom: 30px;" />
+					</td></tr>
+				</table>
+			</div>
+		</div>
+		
+		<div data-role="content">
+			
+			<table id="lb" cellspacing="0" cellpadding="5" style="font-family: 'Ubuntu';width:110%;margin-left:-5%;border: none;border-collapse: separate;border-spacing: 0 4px;">
+				<tr class="heading1" style="background-color:#464646;color:white;border-color:#464646">
+				<td style="width:20%;font-family: 'Ubuntu';text-align:center;font-size:12px;">
+					BADGE
+				</td>
+				
+				<td style="width:36%;font-family: 'Ubuntu';text-align:center;font-size:12px;">
+					PLAYER
+				</td>
+				
+				<td style="width:22%;font-family: 'Ubuntu';text-align:center;font-size:12px;">
+					ALL TIME SCORE
+				</td>
+				
+				<td style="width:22%;font-family: 'Ubuntu';text-align:center;font-size:12px;">
+					MONTHLY SCORE
+				</td>
+				</tr>
+			</table>
+		</div>
+	
+	
+		<div data-role="footer" style="background:transparent;">
+			<div style="float:left;padding-left:20px;">
+				<img src="images/Back.png" id="pprev" />
+			</div>
+			<div style="float:right;padding-right:20px;">
+				<img src="images/More.png" id="pnext" />
+			</div>
+		</div>
+	</div>
+	
+	<div data-role="page" id="league_page" style="font-size:small;">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" class="menulink" style="height: 30px;" />
+			<div class="points_d">
+			<table style="height:34px;margin-top:-15%;">
+					<tr><td>
+						<p id="Points_lp" style="font-size:16px;"></p>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 34px;" />
+					</td></tr>
+				</table>
+			</div>
+		</div>
+		
+		<div data-role="content">
+			<div>
+				<a href="#"><img src="images/create_league.png" id="create_league_option" /></a>
+				<a href="#"><img src="images/join_league.png" id="join_league_option" /></a>
+				<a href="#"><img src="images/my_league.png" id="my_league_option" /></a>
+			</div>
+		</div>
+	</div>
+	
+	<div data-role="page" id="create_league" style="font-size:small;">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" class="menulink" style="height: 30px;" />
+			<div class="points_d">
+			<table style="height:34px;margin-top:-15%;">
+					<tr><td>
+						<p id="Points_clp" style="font-size:16px;"></p>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 34px;" />
+					</td></tr>
+				</table>
+			</div>
+		</div>
+		
+		<div data-role="content">
+			<div>
+				<center><img src="images/league_icon.png" /><center>
+			</div>
+			<div>
+				<center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:16px;">NAME YOUR LEAGUE</p></center>
+				<center><input type="text" name="league_name" id="league_name" value="" class="formField required" /></center>
+				<center><img src="images/Shape-4-copy-2.png" /></center>
+			</div>
+			
+			<div style="padding-top:10px;">
+				<center><a href="#"><img src="images/continue.png" id="cl_continue" /></a></center>
+			</div>
+			
+			<div>
+				<center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:16px;">YOUR LEAGUE CODE</p></center>
+				<center><input type="text" name="league_code" id="league_code" value="" class="formField required" /></center>
+				<center><a href="#"><img src="images/continue.png" id="cl_continue1" /></a></center>
+			</div>
+		</div>
+	</div>
+	
+	<div data-role="page" id="join_league" style="font-size:small;">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" class="menulink" style="height: 30px;" />
+			<div class="points_d">
+			<table style="height:34px;margin-top:-15%;">
+					<tr><td>
+						<p id="Points_jlp" style="font-size:16px;"></p>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 34px;" />
+					</td></tr>
+				</table>
+			</div>
+		</div>
+		
+		<div data-role="content">
+			<div>
+				<center><img src="images/league_icon.png" /><center>
+			</div>
+			<div>
+				<center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:16px;">LEAGUE NAME</p></center>
+				<center><input type="text" name="league_name1" id="league_name1" value="" class="formField required" /></center>
+				<center><img src="images/Shape-4-copy-2.png" style="padding-top:20px;" /></center>
+			</div>
+			
+			<div>
+				<center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:16px;">ENTER LEAGUE CODE</p></center>
+				<center><input type="text" name="league_code1" id="league_code1" value="" class="formField required" /></center>
+				<center><a href="#"><img src="images/confirm.png" id="jl_confirm" /></a></center>
+			</div>
+		</div>
+	</div>
+	
+	<script>
+		function goLeague(num){
+			if(num==-1){
+				$.mobile.changePage($("#leaderboard_page"));
+			}
+			else{
+				localStorage.setItem('league_view',num);
+				$.mobile.changePage($("#league_leaderboard_page"));
+			}
+		}
+	</script>
+	
+	<div data-role="page" id="my_league" style="font-size:small;">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" class="menulink" style="height: 30px;" />
+			<div class="points_d">
+			<table style="height:34px;margin-top:-15%;">
+					<tr><td>
+						<p id="Points_ylp" style="font-size:16px;"></p>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 34px;" />
+					</td></tr>
+				</table>
+			</div>
+		</div>
+		
+		<div data-role="content">
+			<div>
+				<center><img src="images/league_icon.png" /><center>
+			</div>
+			<center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:16px;">MY LEAGUES</p></center>
+			<table id="ll" cellspacing="0" cellpadding="5" style="width:100%;border-spacing: 0 10px;">
+			</table>
+		</div>
+	</div>
+	
+	<div data-role="page" id="league_leaderboard_page" style="font-size:small;">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" class="menulink" style="height: 30px;" />
+			<div class="points_d">
+			<table style="height:34px;margin-top:-15%;">
+					<tr><td>
+						<p id="Points_llbp" style="font-size:16px;"></p>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 34px;" />
+					</td></tr>
+				</table>
+			</div>
+		</div>
+		
+		<div data-role="content">
+			
+			<table id="lb1" cellspacing="0" cellpadding="5" style="font-family: 'Ubuntu';width:110%;margin-left:-5%;border: none;border-collapse: separate;border-spacing: 0 4px;">
+				<!--<tr class="heading1" style="background-color:#464646;color:white;border-color:#464646"><td style="width:20%;text-align:center;font-size:12px;">BADGE</td><td style="width:36%;text-align:center;font-size:12px;">PLAYER</td><td style="width:22%;font-family: 'Ubuntu';text-align:center;font-size:12px;">ALL TIME SCORE</td><td style="width:22%;text-align:center;font-size:12px;">MONTHLY SCORE</td></tr>-->
+			</table>
+		</div>
+	
+	
+		<div data-role="footer" style="background:transparent;">
+			<div style="float:left;padding-left:20px;">
+				<img src="images/Back.png" id="pprev1" />
+			</div>
+			<div style="float:right;padding-right:20px;">
+				<img src="images/More.png" id="pnext1" />
+			</div>
+		</div>
+	</div>
+	
+	<script>
+		function getContacts(mailType){
+			localStorage.setItem('mail_type',mailType);
+			$.mobile.changePage($("#invite_credential_page"));
+		}
+	</script>
+	
+	<div data-role="page" id="invite_page" style="font-size:small;">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" class="menulink" style="height: 30px;" />
+			<div class="points_d">
+			<table style="height:34px;margin-top:-15%;">
+					<tr><td>
+						<p id="Points_ip" style="font-size:16px;"></p>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 34px;" />
+					</td></tr>
+				</table>
+			</div>
+		</div>
+		
+		<div data-role="content">
+			<a href="#" ><img src="images/Gmail.png" id="gmail_option" onclick="getContacts('gmail')" style="padding-bottom:35px;padding-top:25px;padding-left:8px;" /></a>
+			<a href="#" ><img src="images/Hotmail.png" id="hotmail_option" onclick="getContacts('hptmail')" style="padding-bottom:35px;" /></a>
+			<a href="#" ><img src="images/Yahoo.png" id="yahoo_option" onclick="getContacts('yahoo')" style="padding-bottom:35px;padding-left:7px;" /></a>
+			<a href="#" ><img src="images/AOL.png" id="aol_option" onclick="getContacts('aol')" style="padding-bottom:35px;padding-left:8px;" /></a>
+			<a href="#" ><img src="images/Skype.png" id="skype_option" style="padding-bottom:35px;padding-left:12px;" /></a>
+			<a href="#" ><img src="images/Others.png" id="others_option" style="padding-top:5px;padding-left:12px;" /></a>
+		</div>
+	</div>
+	
+	<div data-role="page" id="invite_credential_page" style="font-size:small;">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" class="menulink" style="height: 30px;" />
+			<div class="points_d">
+			<table style="height:34px;margin-top:-15%;">
+					<tr><td>
+						<p id="Points_icp" style="font-size:16px;"></p>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 34px;" />
+					</td></tr>
+				</table>
+			</div>
+		</div>
+		
+		<div data-role="content">
+			<div style="">
+				<center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:14px;">EMAIL ID</p></center>
+				<center><input type="text" id="i_email" value="" class="formField required" /></center>
+				<center><img src="images/Shape-4-copy-2.png" /></center>
+			</div>
+			
+			<div style="">
+				<center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:14px;">PASSWORD</p></center>
+				<center><input type="password" id="i_password" value="" class="formField required" /></center>
+				<center><a href="#" ><img src="images/import-contacts.png" id="import_contact" style="padding-top:5px;" /></a></center>
+			</div>
+		</div>
+	</div>
+	
+	<div data-role="page" id="email_list_page" style="font-size:small;">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" class="menulink" style="height: 30px;" />
+			<div class="points_d">
+			<table style="height:34px;margin-top:-15%;">
+					<tr><td>
+						<p id="Points_elp" style="font-size:16px;"></p>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 34px;" />
+					</td></tr>
+				</table>
+			</div>
+		</div>
+		
+		<div data-role="content">
+			<div><center><p style="color:#4a6f72;font-family: 'Ubuntu';font-size:16px;">CONTACTS</p></center></div>
+			<div><center>
+			<table id="eltable" style="font-family: 'Ubuntu';width:100%;border: none;border-collapse: separate;border-spacing: 0 4px;">
+			<!--<tr><td style="width:20%;"><input type="checkbox" id="checkbox-1" /></td><td style="width:80%;"><p id="email1" style="font-size:12px;">jigar_shah192@yahoo.co.in</p></td></tr>-->
+			</table>
+			<center></div>
+			<div><center>
+				<a href="#" ><img src="images/Invite_contacts.png" id="invite_contact" style="padding-top:5px;" /></a>
+			</center></div>
+		</div>
+	</div>
+	
+	<div data-role="page" id="lost_connection_page" style="font-size:small;">
+		<div data-role="header" style="padding: 10px;">
+			<img src="images/MenuIconcopy8.png" class="menulink" style="height: 30px;" />
+			<div class="points_d">
+			<table style="height:34px;margin-top:-15%;">
+					<tr><td>
+						<p id="Points_lcp" style="font-size:16px;"></p>
+					</td>
+					<td>
+						<img src="images/PointsDisplaycopy5.png" style="height: 34px;" />
+					</td></tr>
+				</table>
+			</div>
+		</div>
+		
+		<div data-role="content">
+			<center></div>
+			<div><center>
+				<img src="images/Vector-Smart-Object.png" style="padding-top:90px;" /></a>
+			</center></div>
+			<div><center>
+				<img src="images/Shape-4-copy-2.png" style="padding-top:20px;" /></a>
+			</center></div>
+			
+			<div><center><p style="color:#7e7e7e;font-family: 'Ubuntu';font-size:16px;">THERE APPEARS TO BE A PROBLEM WITH YOUR CONNECTION</p></center></div>
+			
+			<div><center><p style="color:#7e7e7e;font-family: 'Ubuntu';font-size:16px;">check your settings and try again</p></center></div>
+		</div>
+	
+	</div>
+	
+	</body>
+
+	
+</html>
