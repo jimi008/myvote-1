@@ -38,8 +38,8 @@
 							$('#splash img#textonly').fadeIn(1000);
 							$('#splash img#sport').fadeIn(1000);
 					});
-					$("#splash img#bottlecircle").fadeOut(1000);
-				}, 2000);
+					$("#splash img#bottlecircle").fadeOut(3000);
+				}, 1000);
 			});
 		}
 		
@@ -62,7 +62,7 @@
 			$("#splash img#bottleright").css('left', totalw/2+100-39);
 			$("#splash img#bottlecenter").css('left', totalw/2-20);
 			
-			setTimeout(startSplash,3000);
+			setTimeout(startSplash,500);
 			
 			$('#instruction_mix').live("swipeleft", function(){
 				$.mobile.changePage("#instruction_game", {
@@ -2159,7 +2159,7 @@ a.tappable-active {
 			</div>
 			
 			<div style="margin-top:-5px;">
-				<center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:16px;">SEX</p></center>
+				<center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:16px;">Gender</p></center>
 				<center><fieldset data-role="controlgroup" data-type="horizontal" >
 								<input type="radio" name="sex" id="male" value="0" />
 								<label for="male">Male</label>
@@ -2376,15 +2376,32 @@ a.tappable-active {
 	
 	<script>
 		function editContent(num){
-			var str = $('#l' + num).text();
-			$('#p' + num).html('');
-			if(str=="empty"){
-				$('#p' + num).append( '<input type="text" name="t' + num + '" id="t' + num + '"></input>' );
+			if(num!="3")
+			{
+				var str = $('#l' + num).text();
+				$('#p' + num).html('');
+				if(str=="empty"){
+					$('#p' + num).append( '<input type="text" name="t' + num + '" id="t' + num + '"></input>' );
+				}
+				else{
+					$('#p' + num).append( '<input type="text" value="' + str + '" name="t' + num + '" id="t' + num + '"></input>' );
+				}
+				$('#e' + num).show();
 			}
-			else{
-				$('#p' + num).append( '<input type="text" value="' + str + '" name="t' + num + '" id="t' + num + '"></input>' );
+			else
+			{
+				var str = $('#l' + num).text();
+				$('#p' + num).html('');
+				if(str=="empty"){
+					$('#p' + num).append( '<input type="text" name="t' + num + '" id="t' + num + '"></input>' );
+				}
+				else{
+					$('#p' + num).append( '<input type="radio" value="man" name="t' + num + '" id="t' + num + '"></input>' );
+					$('#p' + num).append( '<input type="radio" value="woman" name="t' + num + '" id="t' + num + '"></input>' );
+				}
+				$('#e' + num).show();
 			}
-			$('#e' + num).show();
+			
 		}
 		
 		function updateContent(num){
@@ -2403,7 +2420,10 @@ a.tappable-active {
 				str = str + "&dob=" + $('#t2').val();
 				temp = $('#t2').val();
 			}
-			
+			if(num == "3"){
+				str = str + "&sex=" + $('input:radio[name="t3"]:checked').val();
+				temp = $('input:radio[name="t3"]:checked').val();
+			}
 			if(num == "4"){
 				str = str + "&city=" + $('#t4').val();
 				temp = $('#t4').val();
@@ -2543,7 +2563,7 @@ a.tappable-active {
 				</tr>
 				
 				<tr>
-					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Sex:</td>
+					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Gender:</td>
 					<td width="55%" align="left" valign="middle" id="p3" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l3" onclick="editContent('3')" style="color:black;"></a></td>
 					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e3" onclick="updateContent('3')" style="display:none;color:green;">edit</a></td>
 				</tr>
@@ -2637,9 +2657,9 @@ a.tappable-active {
 			<center><img src="images/Shape-4-copy-2.png"></center>
 			<p style="color:#7e7e7e; font-family: 'Ubuntu';font-size:small; text-align:justify;font-size:10px;font-weight:bold;padding-right:25px;padding-top:30px;padding-left:25px;">
 				My Vote: Respect For ALL
-				<br/>My Vote is committed to <b style="font-size:small;">protecting</b> and <b style="font-size:small;">respecting</b> any data you enter, from demographic information to your individual gaming input.
-				<br/>My Vote will always endeavor to ask every question <b style="font-size:small;">respectfully</b>, in a considerate manner that accommodates all users and subjects.
-				<br/>We are, and always will be, <b style="font-size:small;">respectful</b>.
+				<br/>My Vote is committed to protecting and respecting any data you enter, from demographic information to your individual gaming input.
+				<br/>My Vote will always endeavor to ask every question respectfully, in a considerate manner that accommodates all users and subjects.
+				<br/>We are, and always will be, respectful.
 				<br/>My Vote.
 			</p>
 			<center><img src="images/Shape-4-copy-2.png" style="padding-bottom:10px;"></center>
