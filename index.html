@@ -138,8 +138,7 @@
 				$(this).addClass('box_rotate box_transition');
 				setTimeout(function(){
 					$.mobile.changePage("#menu_page", {
-						transition: "slide",
-						reverse: true
+						transition: "slide"
 					});
 					//alert($(this).attr('class'));
 					$(".menulink").removeClass('box_rotate');
@@ -274,7 +273,14 @@
 				alert("Please fill in all the details.");
 			}
 			
-			else{
+			else {
+			    if (isDate($("#dob").val())) {
+
+			    }
+			    else {
+			        alert("Please fill valid date(dd/mm/yyyy)");
+			        return;
+			    }
 			var str = "login_type=1&password=" + localStorage.getItem('password') + "&firstname=" + $("#name").val() + "&sex=" + $("input[name*=sex]:checked").val() + "&dob=" + $("#dob").val() + "&email=" + localStorage.getItem('email') + "&city=" + $("#city").val();
 			var request = $.ajax({
 				url: "http://modedawebtest.co.uk/myvote/api/user/register",
@@ -2378,7 +2384,7 @@ a.tappable-active {
 	function opensite()
 	{
 		var id = localStorage.getItem('user_id');
-		window.open('http://modedawebtest.co.uk/myvote/web1.1/redirect-to-shop.php?id='+id);
+		window.open(encodeURI('http://modedawebtest.co.uk/myvote/web1.1/redirect-to-shop.php?id='+id), '_system');
 	}
 		function editContent(num){
 			if(num!="3")
