@@ -1440,13 +1440,13 @@
 	$('#league_page').live('pageshow', function(event, ui){
 		$('#Points_lp').text(localStorage.getItem('points'));
 		$('#create_league_option').click(function(e){
-			$.mobile.changePage($("#create_league"),{ transition: "none" });
+			$.mobile.changePage($("#create_league"));
 		});
 		$('#join_league_option').click(function(e){
-			$.mobile.changePage($("#join_league"),{ transition: "none" });
+			$.mobile.changePage($("#join_league"));
 		});
 		$('#my_league_option').click(function(e){
-			$.mobile.changePage($("#my_league"),{ transition: "none" });
+			$.mobile.changePage($("#my_league"));
 		});
 	});
 	
@@ -2206,7 +2206,7 @@ a.tappable-active {
 			<a href="#"><img src="images/Results.png" id="results_option"></a>
 			<a href="#"><img src="images/League.png" id="league_option"></a>
 			<a href="#"><img src="images/Invite.png" id="invite_option"></a>
-			<img src="images/Rewards.png" id="rewards_option">
+			<a href="#" onclick="opensite();"><img src="images/Rewards.png" id="rewards_option"></a>
 			</div>
 		</div>
 	</div>
@@ -2375,6 +2375,11 @@ a.tappable-active {
 	</div>
 	
 	<script>
+	function opensite()
+	{
+		var id = localStorage.getItem('user_id');
+		window.open('http://modedawebtest.co.uk/myvote/web1.1/redirect-to-shop.php?id='+id);
+	}
 		function editContent(num){
 			if(num!="3")
 			{
@@ -2403,7 +2408,41 @@ a.tappable-active {
 			}
 			
 		}
-		
+		function isDate(txtDate)
+		{
+		    var currVal = txtDate;
+		    if(currVal == '')
+		        return false;
+  
+		    //Declare Regex  
+		    var rxDatePattern = /^(\d{1,2})(\/|-)(\d{1,2})(\/|-)(\d{4})$/; 
+		    var dtArray = currVal.match(rxDatePattern); // is format OK?
+
+		    if (dtArray == null)
+		        return false;
+ //dd/mm/yyyy
+		    dtDay = dtArray[1];
+		    dtMonth= dtArray[3];
+		    dtYear = dtArray[5];   
+		    if (dtYear < 2002) {
+		        return false;
+		    }
+
+		    if (dtMonth < 1 || dtMonth > 12)
+		        return false;
+		    else if (dtDay < 1 || dtDay> 31)
+		        return false;
+		    else if ((dtMonth==4 || dtMonth==6 || dtMonth==9 || dtMonth==11) && dtDay ==31)
+		        return false;
+		    else if (dtMonth == 2)
+		    {
+		        var isleap = (dtYear % 4 == 0 && (dtYear % 100 != 0 || dtYear % 400 == 0));
+		        if (dtDay> 29 || (dtDay ==29 && !isleap))
+		            return false;
+		    }
+		    return true;
+		}
+
 		function updateContent(num){
 		if($('#t' + num).val()){
 			if(num<=4){
@@ -2416,7 +2455,13 @@ a.tappable-active {
 				temp = $('#t1').val();
 			}
 			
-			if(num == "2"){
+			if (num == "2") {
+			    if (isDate(txtVal)) {
+			        
+			    } else {
+			        alert('Invalid Date');
+			        return;
+			    }
 				str = str + "&dob=" + $('#t2').val();
 				temp = $('#t2').val();
 			}
@@ -2553,7 +2598,7 @@ a.tappable-active {
 				<tr>
 					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Name:</td>
 					<td width="55%" align="left" valign="middle" id="p1" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l1" onclick="editContent('1')" style="color:black;"></a></td>
-					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e1" onclick="updateContent('1')" style="display:none;color:green;">edit</a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e1" onclick="updateContent('1')" style="display:none;color:green;">edit(dd/mm/yyyy)</a></td>
 				</tr>
 				
 				<tr>
