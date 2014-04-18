@@ -829,7 +829,7 @@
 				
 		
 		request.fail(function( jqXHR, textStatus ) {
-			$.mobile.changePage($("#lost_connection_page"));
+			//$.mobile.changePage($("#lost_connection_page"));
 		});
 		
 	});
@@ -2407,8 +2407,8 @@ a.tappable-active {
 					$('#p' + num).append( '<input type="text" name="t' + num + '" id="t' + num + '"></input>' );
 				}
 				else{
-					$('#p' + num).append( '<input type="radio" value="man" name="t' + num + '" id="t' + num + '"></input>' );
-					$('#p' + num).append( '<input type="radio" value="woman" name="t' + num + '" id="t' + num + '"></input>' );
+					$('#p' + num).append( '<input type="radio" value="1" name="t' + num + '" id="t' + num + '">Male' );
+					$('#p' + num).append( '<input type="radio" value="2" name="t' + num + '" id="t' + num + '">Female' );
 				}
 				$('#e' + num).show();
 			}
@@ -2426,10 +2426,12 @@ a.tappable-active {
 
 		    if (dtArray == null)
 		        return false;
- //dd/mm/yyyy
+		    //yyyy/mm//dd
+		    dtYear = dtArray[5];
+		    dtMonth = dtArray[3];
 		    dtDay = dtArray[1];
-		    dtMonth= dtArray[3];
-		    dtYear = dtArray[5];   
+		    
+		       
 		    if (dtYear < 2002) {
 		        return false;
 		    }
@@ -2462,13 +2464,14 @@ a.tappable-active {
 			}
 			
 			if (num == "2") {
-			    if (isDate(txtVal)) {
+			    alert($('#t2').val());
+			    if (isDate($('#t2').val())) {
 			        
 			    } else {
 			        alert('Invalid Date');
 			        return;
 			    }
-				str = str + "&dob=" + $('#t2').val();
+			    str = str + "&dob=" + $('#t2').val();
 				temp = $('#t2').val();
 			}
 			if(num == "3"){
