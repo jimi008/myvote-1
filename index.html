@@ -783,14 +783,14 @@
 				$('#l1').text("empty");
 			}
 
-			if(msg[0].Sex == "0"){
+			if(msg[0].Sex == "1"){
 				//$('input:radio[name="sex"]').filter('[value="0"]').next().click();
-				$('#l3').text("Male");
+				$('#l3').text("Female");
 			}
 			
-			else if(msg[0].Sex == "1"){
+			else if(msg[0].Sex == "2"){
 				//$('input:radio[name="sex"]').filter('[value="1"]').next().click();
-				$('#l3').text("Female");
+				$('#l3').text("Male");
 			}
 			
 			else{
@@ -2385,17 +2385,21 @@ a.tappable-active {
 	{
 		var id = localStorage.getItem('user_id');
 		window.open(encodeURI('http://modedawebtest.co.uk/myvote/web1.1/redirect-to-shop.php?id='+id), '_system');
+		//window.open('http://modedawebtest.co.uk/myvote/web1.1/redirect-to-shop.php?id='+id, '_blank');
 	}
 		function editContent(num){
-			if(num!="3")
+		
+			if(num!=3)
 			{
-				var str = $('#l' + num).text();
+			if(num==2)
+			{
+			var str = $('#l' + num).text();
 				$('#p' + num).html('');
 				if(str=="empty"){
 					$('#p' + num).append( '<input type="text" name="t' + num + '" id="t' + num + '"></input>' );
 				}
 				else{
-					$('#p' + num).append( '<input type="text" value="' + str + '" name="t' + num + '" id="t' + num + '"></input>' );
+					$('#p' + num).append( '<input type="text" value="' + reformatDate(str) + '" name="t' + num + '" id="t' + num + '"></input>' );
 				}
 				$('#e' + num).show();
 			}
@@ -2407,8 +2411,32 @@ a.tappable-active {
 					$('#p' + num).append( '<input type="text" name="t' + num + '" id="t' + num + '"></input>' );
 				}
 				else{
-					$('#p' + num).append( '<input type="radio" value="1" name="t' + num + '" id="t' + num + '">Male' );
-					$('#p' + num).append( '<input type="radio" value="2" name="t' + num + '" id="t' + num + '">Female' );
+					$('#p' + num).append( '<input type="text" value="' + str + '" name="t' + num + '" id="t' + num + '"></input>' );
+				}
+				$('#e' + num).show();
+				}
+			}
+			else
+			{
+				var str = $('#l' + num).text();
+				
+				$('#p' + num).html('');
+				if(str=="empty"){
+					$('#p' + num).append( '<input type="radio" value="2" checked="checked" name="t' + num + '" id="t' + num + '">Male' );
+					$('#p' + num).append( '<input type="radio" value="1" name="t' + num + '" id="t' + num + '">Female' );
+				}
+				else{
+				if(str==1)
+				{
+					$('#p' + num).append( '<input type="radio" value="2" checked="checked" name="t' + num + '" id="t' + num + '">Male' );
+					$('#p' + num).append( '<input type="radio" value="1" name="t' + num + '" id="t' + num + '">Female' );
+					}
+					else
+					{
+					$('#p' + num).append( '<input type="radio" value="2" name="t' + num + '" id="t' + num + '">Male' );
+					$('#p' + num).append( '<input type="radio" value="1" checked="checked"  name="t' + num + '" id="t' + num + '">Female' );
+					
+					}
 				}
 				$('#e' + num).show();
 			}
@@ -2423,7 +2451,7 @@ a.tappable-active {
 		    //Declare Regex  
 		    var rxDatePattern = /^(\d{1,2})(\/|-)(\d{1,2})(\/|-)(\d{4})$/; 
 		    var dtArray = currVal.match(rxDatePattern); // is format OK?
-
+alert(dtArray);
 		    if (dtArray == null)
 		        return false;
 		    //yyyy/mm//dd
@@ -2431,7 +2459,7 @@ a.tappable-active {
 		    dtMonth = dtArray[3];
 		    dtDay = dtArray[1];
 		    
-		       
+		       alert(dtyear +dtmonth+dtday);
 		    if (dtYear < 2002) {
 		        return false;
 		    }
@@ -2450,7 +2478,18 @@ a.tappable-active {
 		    }
 		    return true;
 		}
+function reformatDate(dateStr)
+{
+  dArr = dateStr.split("-");  // ex input "2010-01-18"
+  return dArr[2]+ "/" +dArr[1]+ "/" +dArr[0]; //ex out: "18/01/10"
+}
+function formatDate (input) {
+  var datePart = input.match(/\d+/g),
+  year = datePart[2], // get only two digits
+  month = datePart[1], day = datePart[0];
 
+  return year+'/'+month+'/'+day;
+}
 		function updateContent(num){
 		if($('#t' + num).val()){
 			if(num<=4){
@@ -2464,19 +2503,16 @@ a.tappable-active {
 			}
 			
 			if (num == "2") {
-			    alert($('#t2').val());
-			    if (isDate($('#t2').val())) {
-			        
-			    } else {
-			        alert('Invalid Date');
-			        return;
-			    }
-			    str = str + "&dob=" + $('#t2').val();
+			    
+			    alert(formatDate($('#t2').val()));
+			    str = str + "&dob=" + formatDate($('#t2').val());
 				temp = $('#t2').val();
 			}
 			if(num == "3"){
+			temp = $('input:radio[name="t3"]:checked').val()=='1'?'Female':'Male';
+			//alert($('input:radio[name="t3"]:checked').val());
 				str = str + "&sex=" + $('input:radio[name="t3"]:checked').val();
-				temp = $('input:radio[name="t3"]:checked').val();
+				
 			}
 			if(num == "4"){
 				str = str + "&city=" + $('#t4').val();
