@@ -19,9 +19,10 @@
 <script type='text/javascript' src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 <script type='text/javascript' src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
 <script type='text/javascript' src="block.js"></script>
-
+<script type="text/javascript" src="cordova.js"></script>
 
 <script type='text/javascript'>
+
     function startSplash() {
         $("#splash img#bottlecenter").show();
         $("#splash img#bottleleft").show();
@@ -44,7 +45,8 @@
     }
 
     $(document).ready(function () {
-
+       
+        document.addEventListener('deviceready', onDeviceReady, false);
         totalw = $(window).width();
         totalh = $(window).height();
         $('#splash img#bottlecircle').css('top', totalh / 2 - 95);
@@ -147,11 +149,11 @@
             }, 500);
         });
         function onDeviceReady() {
-
+           
             document.addEventListener("backbutton", onBackKeyDown, false);
         }
         function onBackKeyDown(e) {
-            alert("back");
+           
             e.preventDefault();
         }
     });
@@ -168,14 +170,22 @@
             }
             if (temp && temp1) {
                 id = localStorage.getItem('user_id');
+
                 var request = $.ajax({
                     url: "http://modedawebtest.co.uk/myvote/api/answer/points?id=" + id,
                     type: "GET"
                 });
 
                 request.done(function (msg) {
+
+                    //console.log(msg);
+                    //localStorage.setItem('points', msg[0].Points);
+                    //$.mobile.changePage($("#menu_page"));
+
                     console.log(msg);
-                    localStorage.setItem('points', msg[0].Points);
+                    localStorage.setItem('points', msg.Points);
+                    localStorage.setItem('redeemed', msg.redeemed);
+                    localStorage.setItem('remaining', msg.remaining);
                     $.mobile.changePage($("#menu_page"));
                 });
 
@@ -204,6 +214,7 @@
                 });
 
                 request.done(function (msg) {
+
                     console.log(msg);
                     if (msg.user_id == -1) {
                         localStorage.setItem('email', $('#txtEmail').val());
@@ -222,7 +233,9 @@
 
                         request.done(function (msg) {
                             console.log(msg);
-                            localStorage.setItem('points', msg[0].Points);
+                            localStorage.setItem('points', msg.Points);
+                            localStorage.setItem('redeemed', msg.redeemed);
+                            localStorage.setItem('remaining', msg.remaining);
                             $.mobile.changePage($("#menu_page"));
                         });
 
@@ -314,7 +327,10 @@
 
                         request.done(function (msg) {
                             console.log(msg);
-                            localStorage.setItem('points', msg[0].Points);
+                            //localStorage.setItem('points', msg[0].Points);
+                            localStorage.setItem('points', msg.Points);
+                            localStorage.setItem('redeemed', msg.redeemed);
+                            localStorage.setItem('remaining', msg.remaining);
                             $.mobile.changePage($("#instruction_mix"));
                         });
 
@@ -366,7 +382,9 @@
         });
 
     });
-
+    function isArray(what) {
+        return Object.prototype.toString.call(what) === '[object Array]';
+    }
     //Script for question_one_page
     $('#question_one_page').live('pageshow', function (e) {
         $.blockUI({ message: null });
@@ -382,7 +400,7 @@
         $('#q1_out_crowd').show();
         $('#q1_yes').show();
         $('#q1_no').show();
-
+        var id = localStorage.getItem('user_id');
         var load = 0;
         var today = new Date();
         var dd = today.getDate();
@@ -396,27 +414,39 @@
             localStorage.removeItem('Q');
             localStorage.setItem('question_date', today);
             var request = $.ajax({
-                url: "http://modedawebtest.co.uk/myvote/api/question",
+                url: "http://modedawebtest.co.uk/myvote/api/question?id=" + id,
                 type: "GET",
             });
 
             request.done(function (msg) {
-                console.log(msg);
-                var questions = JSON.stringify(msg);
-                localStorage.setItem('questions', questions);
-                $.each(msg.questions, function (i) {
-                    $('#q' + (i + 1) + '_question').text(msg.questions[i].Question);
-                    if (msg.questions[i].MediaType == "0") {
-                        $('#display_q' + (i + 1)).append('<iframe title="YouTube video player" class="youtube-player" type="text/html" width="220" height="130" src="' + msg.questions[i].MediaUrl + '" frameborder="0" allowFullScreen></iframe>');
-                    }
-                    else if (msg.questions[i].MediaType == "1") {
-                        $('#display_q' + (i + 1)).append('<img src="' + msg.questions[i].MediaUrl + '" />');
-                    }
-                });
-                load = load + 1;
-
                 $.mobile.loading('hide');
                 $.unblockUI();
+                //alert(msg.questions);
+                if (isArray(msg.questions)) {
+                    console.log(msg);
+                    var questions = JSON.stringify(msg);
+                    localStorage.setItem('questions', questions);
+                    $.each(msg.questions, function (i) {
+                        $('#q' + (i + 1) + '_question').text(msg.questions[i].Question);
+                        if (msg.questions[i].MediaType == "0") {
+                            $('#display_q' + (i + 1)).append('<iframe title="YouTube video player" class="youtube-player" type="text/html" width="220" height="130" src="' + msg.questions[i].MediaUrl + '" frameborder="0" allowFullScreen></iframe>');
+                        }
+                        else if (msg.questions[i].MediaType == "1") {
+                            $('#display_q' + (i + 1)).append('<img src="' + msg.questions[i].MediaUrl + '" />');
+                        }
+                    });
+                    load = load + 1;
+
+                    $.mobile.loading('hide');
+                    $.unblockUI();
+                }
+                else {
+                    $.mobile.loading('hide');
+                    $.unblockUI();
+                    //alert(msg.questions);
+                    $.mobile.changePage($("#menu_page"));
+                }
+
             });
 
             request.fail(function (jqXHR, textStatus) {
@@ -706,7 +736,9 @@
         $.blockUI({ message: null });
         $.mobile.loading('show', { text: 'Loading', textVisible: true, theme: 'b', html: "" });
         $('#Points_up').text(localStorage.getItem('points'));
-        $('#prem').text("points remaining : " + localStorage.getItem('points'));
+        $('#prem').text("points remaining : " + localStorage.getItem('remaining'));
+        $('#redeemed').text("points redeemed  : " + localStorage.getItem('redeemed'));
+
         var id = localStorage.getItem('user_id');
 
         $('#logout').click(function (e) {
@@ -2095,7 +2127,10 @@ a.tappable-active {
 
 	                    request.done(function (msg) {
 	                        console.log(msg);
-	                        localStorage.setItem('points', msg[0].Points);
+	                        //localStorage.setItem('points', msg[0].Points);
+	                        localStorage.setItem('points', msg.Points);
+	                        localStorage.setItem('redeemed', msg.redeemed);
+	                        localStorage.setItem('remaining', msg.remaining);
 	                        $.mobile.changePage($("#menu_page"));
 	                    });
 	                }
@@ -2478,7 +2513,7 @@ a.tappable-active {
 	        //Declare Regex  
 	        var rxDatePattern = /^(\d{1,2})(\/|-)(\d{1,2})(\/|-)(\d{4})$/;
 	        var dtArray = currVal.match(rxDatePattern); // is format OK?
-	        alert(dtArray);
+	        //alert(dtArray);
 	        if (dtArray == null)
 	            return false;
 	        //yyyy/mm//dd
@@ -2486,7 +2521,7 @@ a.tappable-active {
 	        dtMonth = dtArray[3];
 	        dtDay = dtArray[1];
 
-	        alert(dtyear + dtmonth + dtday);
+	        //alert(dtyear + dtmonth + dtday);
 	        if (dtYear < 2002) {
 	            return false;
 	        }
@@ -2529,7 +2564,7 @@ a.tappable-active {
 
 	                if (num == "2") {
 
-	                    alert(formatDate($('#t2').val()));
+	                    //alert(formatDate($('#t2').val()));
 	                    str = str + "&dob=" + formatDate($('#t2').val());
 	                    temp = $('#t2').val();
 	                }
@@ -2659,7 +2694,7 @@ a.tappable-active {
 		<div data-role="content">
 			
 			<div style="float:right;">
-				<p style="color:#6f8383; font-family: 'Ubuntu';font-size:10px;margin-top:-10px;margin-right:10px;">points redeemed : 0</p>
+				<p style="color:#6f8383; font-family: 'Ubuntu';font-size:10px;margin-top:-10px;margin-right:10px;" id="redeemed">points redeemed : 0</p>
 				<p id="prem" style="color:#6f8383; font-family: 'Ubuntu';font-size:10px;margin-top:-10px;margin-right:10px;"></p>
 			</div>
 			<div style="clear:both"></div>
