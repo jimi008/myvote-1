@@ -45,7 +45,7 @@
     }
 
     $(document).ready(function () {
-       
+
         document.addEventListener('deviceready', onDeviceReady, false);
         totalw = $(window).width();
         totalh = $(window).height();
@@ -149,11 +149,11 @@
             }, 500);
         });
         function onDeviceReady() {
-           
+
             document.addEventListener("backbutton", onBackKeyDown, false);
         }
         function onBackKeyDown(e) {
-           
+
             e.preventDefault();
         }
     });
@@ -421,7 +421,7 @@
             request.done(function (msg) {
                 $.mobile.loading('hide');
                 $.unblockUI();
-                //alert(msg.questions);
+                alert("que");
                 if (isArray(msg.questions)) {
                     console.log(msg);
                     var questions = JSON.stringify(msg);
@@ -2045,7 +2045,7 @@ a.tappable-active {
 	    //initialize settings  
 	    window.fbAsyncInit = function () {
 	        FB.init({
-	            appId: '212701962263449', //appId of your Facebook app  
+	            appId: '553477078101243', //appId of your Facebook app  
 	            status: true,
 	            cookie: true,
 	            xfbml: true,
@@ -2290,7 +2290,7 @@ a.tappable-active {
 	<!-- Question 1 page -->
 	<div data-role="page" id="question_one_page" data-theme="d">
         <div data-role="header" style="padding: 10px;">
-			<img src="images/MenuIconcopy8.png" style="height: 30px;" />
+			<img src="images/MenuIconcopy8.png" style="height: 30px;" class="menulink"/>
 			<div class="points_d">
 			<table>
 					<tr><td>
@@ -2330,7 +2330,7 @@ a.tappable-active {
 	<!-- Question 2 page -->
 	<div data-role="page" id="question_two_page" data-theme="d">
         <div data-role="header" style="padding: 10px;">
-			<img src="images/MenuIconcopy8.png" style="height: 30px;" />
+			<img src="images/MenuIconcopy8.png" style="height: 30px;" class="menulink"/>
 			<div class="points_d">
 			<table>
 					<tr><td>
@@ -2370,7 +2370,7 @@ a.tappable-active {
 	<!-- Question 3 page -->
 	<div data-role="page" id="question_three_page" data-theme="d">
         <div data-role="header" style="padding: 10px;">
-			<img src="images/MenuIconcopy8.png" style="height: 30px;" />
+			<img src="images/MenuIconcopy8.png" style="height: 30px;" class="menulink"/>
 			<div class="points_d">
 			<table>
 					<tr><td>
