@@ -156,8 +156,9 @@
            
             document.addEventListener("backbutton", onBackKeyDown, false);
             try {
-                                      //alert('Device is ready! Make sure you set your app_id below this alert.');
+                                      alert('Device is ready! Make sure you set your app_id below this alert.');
                                       FB.init({ appId: "553477078101243", nativeInterface: CDV.FB, useCachedDialogs: false });
+                                      alert('fbinit');
                                       document.getElementById('data').innerHTML = "";
                                       } catch (e) {
                                       alert(e);
@@ -3361,6 +3362,11 @@ a.tappable-active {
 		</div>
 	
 	</div>
+	<div id="data"></div>
+	 
+
+
+            <div id="log"></div>
 	
 	</body>
 
