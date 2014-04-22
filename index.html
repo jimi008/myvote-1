@@ -2115,7 +2115,7 @@ a.tappable-active {
 	            }
 
 	            var str = "&firstname=" + firstname + "&lastname=" + lastname + "&sex=" + sex + "&dob=" + dob + "&email=" + email + "&city=" + city + "&state=" + state + "&country=" + country + "&login_type=2";
-
+alert(str);
 	            var request = $.ajax({
 	                url: "http://modedawebtest.co.uk/myvote/api/user/register",
 	                type: "POST",
@@ -2123,6 +2123,7 @@ a.tappable-active {
 	            });
 
 	            request.done(function (msg) {
+	            alert(msg);
 	                console.log(msg);
 	                if (msg.user_id == -1) {
 	                    alert("Server Error. Please try again");
