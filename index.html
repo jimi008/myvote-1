@@ -158,7 +158,7 @@
             try {
                                       //alert('Device is ready! Make sure you set your app_id below this alert.');
                                       FB.init({ appId: "553477078101243", nativeInterface: CDV.FB, useCachedDialogs: false });
-                                      alert('fbinit');
+                                      //alert('fbinit');
                                       document.getElementById('data').innerHTML = "";
                                       } catch (e) {
                                       alert(e);
@@ -433,13 +433,14 @@
             request.done(function (msg) {
                 $.mobile.loading('hide');
                 $.unblockUI();
-                alert("que");
+                //alert("que");
                 if (isArray(msg.questions)) {
                     console.log(msg);
                     var questions = JSON.stringify(msg);
                     localStorage.setItem('questions', questions);
                     $.each(msg.questions, function (i) {
                         $('#q' + (i + 1) + '_question').text(msg.questions[i].Question);
+                        $('#icon_q' + (i + 1)).append('<img src="U1/' + msg.questions[i].Question_Type + '.png" />');
                         if (msg.questions[i].MediaType == "0") {
                             $('#display_q' + (i + 1)).append('<iframe title="YouTube video player" class="youtube-player" type="text/html" width="220" height="130" src="' + msg.questions[i].MediaUrl + '" frameborder="0" allowFullScreen></iframe>');
                         }
@@ -474,9 +475,9 @@
                 console.log(msg);
                 var questions_t = JSON.stringify(msg);
                 localStorage.setItem('questions_types', questions_t);
-                $.each(msg.questions_types, function (i) {
-                    $('#icon_q' + (i + 1)).append('<img src="U1/' + msg.questions_types[i].name + '.png" />');
-                });
+                //$.each(msg.questions_types, function (i) {
+                  //  $('#icon_q' + (i + 1)).append('<img src="U1/' + msg.questions_types[i].id + '.png" />');
+                //});
                 load = load + 1;
             });
 
@@ -502,7 +503,7 @@
 
             var question_t1 = JSON.parse(localStorage.getItem('questions_types'));
             $.each(question_t1.questions_types, function (i) {
-                $('#icon_q' + (i + 1)).append('<img src="U1/' + question_t1.questions_types[i].name + '.png" />');
+                $('#icon_q' + (i + 1)).append('<img src="U1/' + question_t1.questions_types[i].id + '.png" />');
             });
 
             if (localStorage.getItem('Q1') && localStorage.getItem('Q2')) {
@@ -2078,7 +2079,7 @@ a.tappable-active {
 	    }
 
 	    function getUserInfo() {
-	    alert("getuser");
+	    //alert("getuser");
 	        FB.api('/me', function (response) {
 
 	            var firstname, lastname, gender, dob, email, city, state, country;
@@ -2116,7 +2117,7 @@ a.tappable-active {
 	            }
 
 	            var str = "&firstname=" + firstname + "&lastname=" + lastname + "&sex=" + sex + "&dob=" + dob + "&email=" + email + "&city=" + city + "&state=" + state + "&country=" + country + "&login_type=2";
-alert(str);
+//alert(str);
 	            var request = $.ajax({
 	                url: "http://modedawebtest.co.uk/myvote/api/user/register",
 	                type: "POST",
