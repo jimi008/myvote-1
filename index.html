@@ -49,7 +49,7 @@
     }
 
     $(document).ready(function () {
-       
+
         document.addEventListener('deviceready', onDeviceReady, false);
         totalw = $(window).width();
         totalh = $(window).height();
@@ -153,19 +153,19 @@
             }, 500);
         });
         function onDeviceReady() {
-           
+
             document.addEventListener("backbutton", onBackKeyDown, false);
             try {
-                                      //alert('Device is ready! Make sure you set your app_id below this alert.');
-                                      FB.init({ appId: "553477078101243", nativeInterface: CDV.FB, useCachedDialogs: false });
-                                      //alert('fbinit');
-                                      document.getElementById('data').innerHTML = "";
-                                      } catch (e) {
-                                      alert(e);
-                                      }
+                //alert('Device is ready! Make sure you set your app_id below this alert.');
+                FB.init({ appId: "553477078101243", nativeInterface: CDV.FB, useCachedDialogs: false });
+                //alert('fbinit');
+                document.getElementById('data').innerHTML = "";
+            } catch (e) {
+                alert("exception:" + e);
+            }
         }
         function onBackKeyDown(e) {
-           
+
             e.preventDefault();
         }
     });
@@ -419,53 +419,63 @@
         var mm = today.getMonth() + 1; //January is 0!
 
         var yyyy = today.getFullYear();
+        alert(id);
         if (dd < 10) { dd = '0' + dd } if (mm < 10) { mm = '0' + mm } today = yyyy + '-' + mm + '-' + dd;
 
         var temp = localStorage.getItem('question_date');
+
         if (!temp || temp != today) {
             localStorage.removeItem('Q');
             localStorage.setItem('question_date', today);
-            var request = $.ajax({
-                url: "http://modedawebtest.co.uk/myvote/api/question?id=" + id,
-                type: "GET",
-            });
+            
+            try {
+                var request = $.ajax({
+                    url: "http://modedawebtest.co.uk/myvote/api/question?id=" + id,
+                    type: "GET",
+                });
 
-            request.done(function (msg) {
-                $.mobile.loading('hide');
-                $.unblockUI();
-                //alert("que");
-                if (isArray(msg.questions)) {
-                    console.log(msg);
-                    var questions = JSON.stringify(msg);
-                    localStorage.setItem('questions', questions);
-                    $.each(msg.questions, function (i) {
-                        $('#q' + (i + 1) + '_question').text(msg.questions[i].Question);
-                        $('#icon_q' + (i + 1)).append('<img src="U1/' + msg.questions[i].Question_Type + '.png" />');
-                        if (msg.questions[i].MediaType == "0") {
-                            $('#display_q' + (i + 1)).append('<iframe title="YouTube video player" class="youtube-player" type="text/html" width="220" height="130" src="' + msg.questions[i].MediaUrl + '" frameborder="0" allowFullScreen></iframe>');
-                        }
-                        else if (msg.questions[i].MediaType == "1") {
-                            $('#display_q' + (i + 1)).append('<img src="' + msg.questions[i].MediaUrl + '" />');
-                        }
-                    });
-                    load = load + 1;
-
+                request.done(function (msg) {
+                    alert("ajax111");
                     $.mobile.loading('hide');
                     $.unblockUI();
-                }
-                else {
+                    alert(isArray(msg.questions));
+                    if (isArray(msg.questions)) {
+                        console.log(msg);
+                        var questions = JSON.stringify(msg);
+                        localStorage.setItem('questions', questions);
+                        $.each(msg.questions, function (i) {
+                            $('#q' + (i + 1) + '_question').text(msg.questions[i].Question);
+                            $('#icon_q' + (i + 1)).append('<img src="U1/' + msg.questions[i].Question_Type + '.png" />');
+                            if (msg.questions[i].MediaType == "0") {
+                                $('#display_q' + (i + 1)).append('<iframe title="YouTube video player" class="youtube-player" type="text/html" width="220" height="130" src="' + msg.questions[i].MediaUrl + '" frameborder="0" allowFullScreen></iframe>');
+                            }
+                            else if (msg.questions[i].MediaType == "1") {
+                                $('#display_q' + (i + 1)).append('<img src="' + msg.questions[i].MediaUrl + '" />');
+                            }
+                        });
+                        load = load + 1;
+
+                        $.mobile.loading('hide');
+                        $.unblockUI();
+                    }
+                    else {
+                        $.mobile.loading('hide');
+                        $.unblockUI();
+                        alert(msg.questions);
+                        $.mobile.changePage($("#menu_page"));
+                    }
+
+                });
+
+                request.fail(function (jqXHR, textStatus) {
                     $.mobile.loading('hide');
                     $.unblockUI();
-                    //alert(msg.questions);
-                    $.mobile.changePage($("#menu_page"));
-                }
-
-            });
-
-            request.fail(function (jqXHR, textStatus) {
-                $.mobile.changePage($("#lost_connection_page"));
-            });
-
+                    $.mobile.changePage($("#lost_connection_page"));
+                });
+            }
+            catch (e) {
+                alert("ajax1" + e);
+            }
             var request = $.ajax({
                 url: "http://modedawebtest.co.uk/myvote/api/question/types",
                 type: "GET",
@@ -476,7 +486,7 @@
                 var questions_t = JSON.stringify(msg);
                 localStorage.setItem('questions_types', questions_t);
                 //$.each(msg.questions_types, function (i) {
-                  //  $('#icon_q' + (i + 1)).append('<img src="U1/' + msg.questions_types[i].id + '.png" />');
+                //  $('#icon_q' + (i + 1)).append('<img src="U1/' + msg.questions_types[i].id + '.png" />');
                 //});
                 load = load + 1;
             });
@@ -488,6 +498,9 @@
         }
 
         else if (temp == today) {
+            alert(localStorage.getItem('questions'));
+            if(localStorage.getItem('questions')!=null)
+            {
             var question_asked = JSON.parse(localStorage.getItem('questions'));
             $.each(question_asked.questions, function (i) {
                 $('#q' + (i + 1) + '_question').text(question_asked.questions[i].Question);
@@ -516,8 +529,16 @@
 
             load = load + 1;
 
-            $.mobile.loading('hide');
+             $.mobile.loading('hide');
             $.unblockUI();
+            }
+            else
+            {
+             $.mobile.loading('hide');
+            $.unblockUI();
+             $.mobile.changePage($("#menu_page"));
+            }
+           
         }
 
         if (load == 2) {
@@ -2079,7 +2100,7 @@ a.tappable-active {
 	    }
 
 	    function getUserInfo() {
-	    //alert("getuser");
+	        //alert("getuser");
 	        FB.api('/me', function (response) {
 
 	            var firstname, lastname, gender, dob, email, city, state, country;
@@ -2117,7 +2138,7 @@ a.tappable-active {
 	            }
 
 	            var str = "&firstname=" + firstname + "&lastname=" + lastname + "&sex=" + sex + "&dob=" + dob + "&email=" + email + "&city=" + city + "&state=" + state + "&country=" + country + "&login_type=2";
-//alert(str);
+	            //alert(str);
 	            var request = $.ajax({
 	                url: "http://modedawebtest.co.uk/myvote/api/user/register",
 	                type: "POST",
@@ -2125,7 +2146,7 @@ a.tappable-active {
 	            });
 
 	            request.done(function (msg) {
-	            alert(msg);
+	                alert(msg);
 	                console.log(msg);
 	                if (msg.user_id == -1) {
 	                    alert("Server Error. Please try again");
