@@ -419,7 +419,7 @@
         var mm = today.getMonth() + 1; //January is 0!
 
         var yyyy = today.getFullYear();
-        alert(id);
+       
         if (dd < 10) { dd = '0' + dd } if (mm < 10) { mm = '0' + mm } today = yyyy + '-' + mm + '-' + dd;
 
         var temp = localStorage.getItem('question_date');
@@ -435,10 +435,10 @@
                 });
 
                 request.done(function (msg) {
-                    alert("ajax111");
+                   
                     $.mobile.loading('hide');
                     $.unblockUI();
-                    alert(isArray(msg.questions));
+                   
                     if (isArray(msg.questions)) {
                         console.log(msg);
                         var questions = JSON.stringify(msg);
