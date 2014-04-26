@@ -1466,11 +1466,11 @@
         var request = $.ajax({
             url: "http://modedawebtest.co.uk/myvote/api/league/created",
             type: "POST",
-            data:"user_id=" + id
+            data: "user_id=" + id
         });
 
         request.done(function (msg) {
-            
+
             $('#ll').html('');
             //$('#ll').append('<tr><td valign="middle" style="width:100%;text-align:center;font-size:12px;"><a href="#"><p id="ll" onclick="goLeague(-1)" style="background:#878788;color:white;padding:5px;" >Created League</p></a></td></tr>');
             $.each(msg.Leagues, function (i) {
@@ -1486,14 +1486,14 @@
             $.mobile.changePage($("#lost_connection_page"));
         });
 
-         request = $.ajax({
+        request = $.ajax({
             url: "http://modedawebtest.co.uk/myvote/api/league/joined",
             type: "POST",
             data: "user_id=" + id
         });
 
         request.done(function (msg) {
-            
+
             $('#lll').html('');
             //$('#lll').append('<tr><td valign="middle" style="width:100%;text-align:center;font-size:12px;"><a href="#"><p id="ll" onclick="goLeague(-1)" style="background:#878788;color:white;padding:5px;" >Joined League</p></a></td></tr>');
             $.each(msg.Leagues, function (i) {
@@ -1722,371 +1722,374 @@
 
 	
 <style>
-body *{font-family:"Ubuntu";}
+    body * {
+        font-family: "Ubuntu";
+    }
 
-#splash{
-	background: transparent url('U1/overallbck.png') no-repeat center center fixed; 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover; 
-}
+    #splash {
+        background: transparent url('U1/overallbck.png') no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
 
-#splash img{
-}
+        #splash img {
+        }
 
-.Rhs div{ 
-	display:inline-block;
-	text-align:center;
-}
+    .Rhs div {
+        display: inline-block;
+        text-align: center;
+    }
 
-#splash img#textonly{
-	-webkit-transform: scale(0.7);
-	-moz-transform: scale(0.7);
-	-o-transform: scale(0.7);
-	transform: scale(0.7);
-}
+    #splash img#textonly {
+        -webkit-transform: scale(0.7);
+        -moz-transform: scale(0.7);
+        -o-transform: scale(0.7);
+        transform: scale(0.7);
+    }
 
-#splash img{
-	position:absolute;
-}
-#splash img#bottlecircle, #splash img#textonly, #splash img#sport{
-	display:none;
+    #splash img {
+        position: absolute;
+    }
 
-}
+        #splash img#bottlecircle, #splash img#textonly, #splash img#sport {
+            display: none;
+        }
 
-#loginpage,#instruction_sm,#instruction_mix,#instruction_game,#instruction_league,#register,#menu_page,#register_page,#update_profile,#results_page,#premiership_select_page,#question_page,#leaderboard_page,#league_page,#create_league,#join_league,#question_one_page,#question_two_page,#question_three_page,#my_league,#league_leaderboard_page,#invite_page,#invite_credential_page,#email_list_page,#lost_connection_page{
-	background: transparent url('images/BackgroundFade.png') no-repeat center center fixed; 
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover; 
-}
+    #loginpage, #instruction_sm, #instruction_mix, #instruction_game, #instruction_league, #register, #menu_page, #register_page, #update_profile, #results_page, #premiership_select_page, #question_page, #leaderboard_page, #league_page, #create_league, #join_league, #question_one_page, #question_two_page, #question_three_page, #my_league, #league_leaderboard_page, #invite_page, #invite_credential_page, #email_list_page, #lost_connection_page {
+        background: transparent url('images/BackgroundFade.png') no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
 
-#charter_page
-{
-	background-color:white;
-}
+    #charter_page {
+        background-color: white;
+    }
 
 
-.ui-bar-a{
-	border: none !important;
-	background: #E0E0E0;
-	background-image: none !important;
-}
+    .ui-bar-a {
+        border: none !important;
+        background: #E0E0E0;
+        background-image: none !important;
+    }
 
-.swipeleftimg{
-	width: 30%;
-}
+    .swipeleftimg {
+        width: 30%;
+    }
 
-.ui-br{
-	border: none !important;
-}
+    .ui-br {
+        border: none !important;
+    }
 
-.question{
-	background:#FFF;
-	border-radius:10px;
-	padding:5px;
-	border-style:solid;
-	border-color:#b9d65c;	
-	margin-bottom:50px;
-}
+    .question {
+        background: #FFF;
+        border-radius: 10px;
+        padding: 5px;
+        border-style: solid;
+        border-color: #b9d65c;
+        margin-bottom: 50px;
+    }
 
-.question_r{
-	background:#D3D4D6;
-	border-radius:5px;
-	padding-right:5px;
-	padding-left:5px;
-	padding-top:1px;
-	padding-bottom:1px;
-}
+    .question_r {
+        background: #D3D4D6;
+        border-radius: 5px;
+        padding-right: 5px;
+        padding-left: 5px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+    }
 
-p.error { 
-	color: red;  
-	vertical-align: top; 
-	font-weight:bold
-}
+    p.error {
+        color: red;
+        vertical-align: top;
+        font-weight: bold;
+    }
 
-.points_d{
-	float:right;
-	color:black;
-	height:30px;
-}
+    .points_d {
+        float: right;
+        color: black;
+        height: 30px;
+    }
 
-.display{
-	border-radius:5px;
-	padding-top: 10px;
-	padding-bottom: 20px;
-	width: 220px;
-	height:130px;
-}
+    .display {
+        border-radius: 5px;
+        padding-top: 10px;
+        padding-bottom: 20px;
+        width: 220px;
+        height: 130px;
+    }
 
-.display img{
-	width: 220px;
-	height:130px;
-}
+        .display img {
+            width: 220px;
+            height: 130px;
+        }
 
-.btn_left{
-	display: inline-block;
-	float: left;
-	border-radius: 2px;
-	padding-left: 18%;
-	padding-right: 18%;
-	margin-left: -6%;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	background: #FFF;
-	font-family: 'Ubuntu';
-	color: #000;
-	font-weight: normal;
-}
+    .btn_left {
+        display: inline-block;
+        float: left;
+        border-radius: 2px;
+        padding-left: 18%;
+        padding-right: 18%;
+        margin-left: -6%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        background: #FFF;
+        font-family: 'Ubuntu';
+        color: #000;
+        font-weight: normal;
+    }
 
-.btn_right{
-	display: inline-block;
-	float: right;
-	border-radius: 2px;
-	padding-left: 18%;
-	padding-right: 24%;
-	padding-top: 10px;
-	margin-right: -6%;
-	padding-bottom: 10px;
-	background: #FFF;
-	font-family: 'Ubuntu';
-	color: #000;
-	font-weight: normal;
-}
+    .btn_right {
+        display: inline-block;
+        float: right;
+        border-radius: 2px;
+        padding-left: 18%;
+        padding-right: 24%;
+        padding-top: 10px;
+        margin-right: -6%;
+        padding-bottom: 10px;
+        background: #FFF;
+        font-family: 'Ubuntu';
+        color: #000;
+        font-weight: normal;
+    }
 
-.btn_left_q{
-	display: inline-block;
-	font-size:10px;
-	float: left;
-	height:45px;
-	width:130px;
-	vertical-align: middle;
-	text-align:center;
-	line-height: 45px; 
-	margin-left: -8%;
-	background: #FFF;
-	font-family: 'Ubuntu';
-	color: #000;
-	margin-top:30px;	
-	border-style:solid;
-	border-color:#b9d65c;
-	border-radius:10px;
-	border-width:2px;
-}
+    .btn_left_q {
+        display: inline-block;
+        font-size: 10px;
+        float: left;
+        height: 45px;
+        width: 130px;
+        vertical-align: middle;
+        text-align: center;
+        line-height: 45px;
+        margin-left: -8%;
+        background: #FFF;
+        font-family: 'Ubuntu';
+        color: #000;
+        margin-top: 30px;
+        border-style: solid;
+        border-color: #b9d65c;
+        border-radius: 10px;
+        border-width: 2px;
+    }
 
-.btn_right_q{
-	display: inline-block;
-	font-size:10px;
-	float: right;
-	height:45px;
-	width:130px;
-	vertical-align: middle;
-	text-align:center;
-	line-height: 45px; 
-	margin-right: -8%;
-	background: #FFF;
-	font-family: 'Ubuntu';
-	color: #000;
-	margin-top:30px;	
-	border-style:solid;
-	border-color:#b9d65c;
-	border-radius:10px;
-	border-width:2px;
-}
+    .btn_right_q {
+        display: inline-block;
+        font-size: 10px;
+        float: right;
+        height: 45px;
+        width: 130px;
+        vertical-align: middle;
+        text-align: center;
+        line-height: 45px;
+        margin-right: -8%;
+        background: #FFF;
+        font-family: 'Ubuntu';
+        color: #000;
+        margin-top: 30px;
+        border-style: solid;
+        border-color: #b9d65c;
+        border-radius: 10px;
+        border-width: 2px;
+    }
 
-.tag_left{
-	display: inline-block;
-	font-size:12px;
-	float: left;
-	height:20px;
-	width:130px;
-	vertical-align: middle;
-	line-height: 20px; 
-	padding-left: 2%;
-	padding-right: 1%;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	background: #FFF;
-	font-family: 'Ubuntu';
-	color: #000;
-	font-weight: bold;
-	margin-top:4px;
-	margin-bottom:4px;	
-}
+    .tag_left {
+        display: inline-block;
+        font-size: 12px;
+        float: left;
+        height: 20px;
+        width: 130px;
+        vertical-align: middle;
+        line-height: 20px;
+        padding-left: 2%;
+        padding-right: 1%;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        background: #FFF;
+        font-family: 'Ubuntu';
+        color: #000;
+        font-weight: bold;
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
 
-.tag_left_done{
-	display: inline-block;
-	font-size:12px;
-	font-weight:100;
-	float: left;
-	height:20px;
-	width:130px;
-	vertical-align: middle;
-	line-height: 20px; 
-	padding-left: 2%;
-	padding-right: 1%;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	background: #464646;
-	font-family: 'Ubuntu';
-	color: #8F8F8F;
-	margin-top:4px;
-	margin-bottom:4px;	
-}
+    .tag_left_done {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 100;
+        float: left;
+        height: 20px;
+        width: 130px;
+        vertical-align: middle;
+        line-height: 20px;
+        padding-left: 2%;
+        padding-right: 1%;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        background: #464646;
+        font-family: 'Ubuntu';
+        color: #8F8F8F;
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
 
-.tag_right{
-	display: inline-block;
-	font-size:12px;
-	float: right;
-	height:20px;
-	width:130px;
-	vertical-align: middle;
-	line-height: 20px; 
-	padding-left: 2%;
-	padding-right: 1%;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	background: #FFF;
-	font-family: 'Ubuntu';
-	color: #000;
-	font-weight: bold;
-	margin-top:4px;
-	margin-bottom:4px;	
-}
+    .tag_right {
+        display: inline-block;
+        font-size: 12px;
+        float: right;
+        height: 20px;
+        width: 130px;
+        vertical-align: middle;
+        line-height: 20px;
+        padding-left: 2%;
+        padding-right: 1%;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        background: #FFF;
+        font-family: 'Ubuntu';
+        color: #000;
+        font-weight: bold;
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
 
-.tag_right_done{
-	display: inline-block;
-	font-size:12px;
-	font-weight:100;
-	float: right;
-	height:20px;
-	width:130px;
-	vertical-align: middle;
-	line-height: 20px; 
-	padding-left: 2%;
-	padding-right: 1%;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	background: #464646;
-	font-family: 'Ubuntu';
-	color: #8F8F8F;
-	margin-top:4px;
-	margin-bottom:4px;	
-}
+    .tag_right_done {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 100;
+        float: right;
+        height: 20px;
+        width: 130px;
+        vertical-align: middle;
+        line-height: 20px;
+        padding-left: 2%;
+        padding-right: 1%;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        background: #464646;
+        font-family: 'Ubuntu';
+        color: #8F8F8F;
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
 
-a{
-	text-decoration:none;
-	color: #000;
-}
-a.tappable-active {
-    color: #FFF;
-    background-color: #666;
-}
+    a {
+        text-decoration: none;
+        color: #000;
+    }
 
-.btn_left1{
-	display: inline-block;
-	float: left;
-	padding-left: 10%;
-	border-radius: 2px;
-	padding-right: 10%;
-	padding-top: 10px;
-	margin-left: -7%;
-	padding-bottom: 10px;
-	background: #FFF;
-	font-family: 'Ubuntu';
-	color: #000;
-	font-weight: normal;
-}
+        a.tappable-active {
+            color: #FFF;
+            background-color: #666;
+        }
 
-.btn_right1{
-	display: inline-block;
-	float: right;
-	padding-left: 3%;
-	border-radius: 2px;
-	padding-right: 6%;
-	margin-right: -6%;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	background: #FFF;
-	font-family: 'Ubuntu';
-	color: #000;
-	font-weight: normal;
-}
+    .btn_left1 {
+        display: inline-block;
+        float: left;
+        padding-left: 10%;
+        border-radius: 2px;
+        padding-right: 10%;
+        padding-top: 10px;
+        margin-left: -7%;
+        padding-bottom: 10px;
+        background: #FFF;
+        font-family: 'Ubuntu';
+        color: #000;
+        font-weight: normal;
+    }
 
-.btn_left2{
-	display: inline-block;
-	float: left;
-	padding-left: 8%;
-	border-radius: 2px;
-	padding-right: 8%;
-	padding-top: 10px;
-	margin-left: -7%;
-	padding-bottom: 10px;
-	background: #FFF;
-	font-family: 'Ubuntu';
-	color: #000;
-	font-weight: normal;
-}
+    .btn_right1 {
+        display: inline-block;
+        float: right;
+        padding-left: 3%;
+        border-radius: 2px;
+        padding-right: 6%;
+        margin-right: -6%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        background: #FFF;
+        font-family: 'Ubuntu';
+        color: #000;
+        font-weight: normal;
+    }
 
-.btn_right2{
-	display: inline-block;
-	float: right;
-	padding-left: 4%;
-	border-radius: 2px;
-	padding-right: 6%;
-	margin-right: -6%;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	background: #FFF;
-	font-family: 'Ubuntu';
-	color: #000;
-	font-weight: normal;
-}
+    .btn_left2 {
+        display: inline-block;
+        float: left;
+        padding-left: 8%;
+        border-radius: 2px;
+        padding-right: 8%;
+        padding-top: 10px;
+        margin-left: -7%;
+        padding-bottom: 10px;
+        background: #FFF;
+        font-family: 'Ubuntu';
+        color: #000;
+        font-weight: normal;
+    }
 
-.green_slide{
-	left:45%;
-	position:absolute;
-	background-image:url('U1/greenresultlarge.png');
-	background-repeat:no-repeat;
-	width: 25px;
-	height:50px;
-	border:none;
-	background-size: contain;
-}
+    .btn_right2 {
+        display: inline-block;
+        float: right;
+        padding-left: 4%;
+        border-radius: 2px;
+        padding-right: 6%;
+        margin-right: -6%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        background: #FFF;
+        font-family: 'Ubuntu';
+        color: #000;
+        font-weight: normal;
+    }
 
-.box_rotate {
-  -webkit-transform: rotate(720deg);  /* Chrome, Safari 3.1+ */
-     -moz-transform: rotate(720deg);  /* Firefox 3.5-15 */
-      -ms-transform: rotate(720deg);  /* IE 9 */
-       -o-transform: rotate(720deg);  /* Opera 10.50-12.00 */
-          transform: rotate(720deg);  /* Firefox 16+, IE 10+, Opera 12.50+ */
-}
-.box_transition {
-  -webkit-transition: all 1.0s ease-out;  /* Chrome 1-25, Safari 3.2+ */
-     -moz-transition: all 1.0s ease-out;  /* Firefox 4-15 */
-       -o-transition: all 1.0s ease-out;  /* Opera 10.50–12.00 */
-          transition: all 1.0s ease-out;  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.50+ */
-}
+    .green_slide {
+        left: 45%;
+        position: absolute;
+        background-image: url('U1/greenresultlarge.png');
+        background-repeat: no-repeat;
+        width: 25px;
+        height: 50px;
+        border: none;
+        background-size: contain;
+    }
 
-#charter_page .ui-radio{
-	width:45%;
-	float:left;
-	clear:none;
-	margin:2%;
-	margin-top:0;
-}
+    .box_rotate {
+        -webkit-transform: rotate(720deg); /* Chrome, Safari 3.1+ */
+        -moz-transform: rotate(720deg); /* Firefox 3.5-15 */
+        -ms-transform: rotate(720deg); /* IE 9 */
+        -o-transform: rotate(720deg); /* Opera 10.50-12.00 */
+        transform: rotate(720deg); /* Firefox 16+, IE 10+, Opera 12.50+ */
+    }
 
-#charter_page .ui-radio label{
-	border:none;
-}
+    .box_transition {
+        -webkit-transition: all 1.0s ease-out; /* Chrome 1-25, Safari 3.2+ */
+        -moz-transition: all 1.0s ease-out; /* Firefox 4-15 */
+        -o-transition: all 1.0s ease-out; /* Opera 10.50–12.00 */
+        transition: all 1.0s ease-out; /* Chrome 26, Firefox 16+, IE 10+, Opera 12.50+ */
+    }
 
-#charter_page .ui-radio *{
-	font-size:small;
-	font-weight:normal;
-	color:#6f8383
-}
+    #charter_page .ui-radio {
+        width: 45%;
+        float: left;
+        clear: none;
+        margin: 2%;
+        margin-top: 0;
+    }
+
+        #charter_page .ui-radio label {
+            border: none;
+        }
+
+        #charter_page .ui-radio * {
+            font-size: small;
+            font-weight: normal;
+            color: #6f8383;
+        }
 </style>
 </head>
 
@@ -2156,15 +2159,27 @@ a.tappable-active {
 	    };
 	    (function () { var e = document.createElement('script'); e.async = true; e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js'; document.getElementById('fb-root').appendChild(e); }());
 	    function doFBLogin() {
-	        FB.login(function (response) {
-	            if (response.authResponse) {
-	                var token = response.authResponse.accessToken;
+
+
+	        FB.getLoginStatus(function (response) {
+	            if (response.status == 'connected') {
+	                alert('logged in');
 	                getUserInfo();
 	            } else {
-	                console.log('Authorization failed.');
+	                FB.login(function (response) {
+	                    if (response.authResponse) {
+	                        var token = response.authResponse.accessToken;
+	                        getUserInfo();
+	                    } else {
+	                        console.log('Authorization failed.');
+	                    }
+	                }, { scope: 'email,user_birthday' });
+	                //scope – the set of fields we received from the server when login
+	                alert('not logged in');
 	            }
-	        }, { scope: 'email,user_birthday' });
-	        //scope – the set of fields we received from the server when login  
+	        });
+
+
 	    }
 
 	    function getUserInfo() {
@@ -2799,11 +2814,11 @@ a.tappable-active {
 	</script>
 	
 	<style>
-	img{
-	max-width: 100%;
-	height: auto;
-	width: auto; /* ie8 */
-	}
+	    img {
+	        max-width: 100%;
+	        height: auto;
+	        width: auto; /* ie8 */
+	    }
 	</style>
 	<!-- Update Profile page -->
 	<div data-role="page" id="update_profile">
@@ -3048,23 +3063,24 @@ a.tappable-active {
 	</div>
 	
 	<style>
-			div.resultrow,div.resultrowheading{
-				display:block;
-				clear:both;
-				border-radius: 7px;
-				padding-top:10px;
-			}
-			div.resultrow>div{
-				float:left;
-				text-align:center;
-				display:none;
-			}
-			
-			
-			div.resultrow>div>.votedin{
-				width:60px;
-			}
-		</style>
+	    div.resultrow, div.resultrowheading {
+	        display: block;
+	        clear: both;
+	        border-radius: 7px;
+	        padding-top: 10px;
+	    }
+
+	        div.resultrow > div {
+	            float: left;
+	            text-align: center;
+	            display: none;
+	        }
+
+
+	            div.resultrow > div > .votedin {
+	                width: 60px;
+	            }
+	</style>
 	<!-- Results page -->
 	<div data-role="page" id="results_page" style="font-size:small;">
 		<div data-role="header" style="padding: 10px;">
@@ -3134,19 +3150,19 @@ a.tappable-active {
 	</div>
 	
 	<style>
-		.heading{
-			float:left;
-			width:110%;
-			height:20px;
-			margin-left:-5%;
-			display:table;
-			padding:2px;
-		}
-		.heading1{
-			height:20px;
-			padding:2px;
-		}
+	    .heading {
+	        float: left;
+	        width: 110%;
+	        height: 20px;
+	        margin-left: -5%;
+	        display: table;
+	        padding: 2px;
+	    }
 
+	    .heading1 {
+	        height: 20px;
+	        padding: 2px;
+	    }
 	</style>
 	
 	<div data-role="page" id="leaderboard_page" style="font-size:small;">
