@@ -81,7 +81,7 @@
     <gap:splash src="res/screen/ios/screen-ipad-landscape.png"     gap:platform="ios"     width="1024" height="768" />
     <gap:splash src="res/screen/windows-phone/screen-portrait.jpg" gap:platform="winphone" />
 <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.4.0">
-    <param name="APP_ID" value="553477078101243" />
+    <param name="APP_ID" value="691773454197271" />
     <param name="APP_NAME" value="My vote" />
 </gap:plugin>
     <!--
