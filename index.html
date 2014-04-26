@@ -1464,15 +1464,17 @@
         $('#Points_ylp').text(localStorage.getItem('points'));
         var id = localStorage.getItem('user_id');
         var request = $.ajax({
-            url: "http://modedawebtest.co.uk/myvote/api/league?user_id=" + id,
-            type: "GET",
+            url: "http://modedawebtest.co.uk/myvote/api/league/created",
+            type: "POST",
+            data:"user_id=" + id
         });
 
         request.done(function (msg) {
+            
             $('#ll').html('');
-            $('#ll').append('<tr><td valign="middle" style="width:100%;text-align:center;font-size:12px;"><a href="#"><p id="ll" onclick="goLeague(-1)" style="background:#878788;color:white;padding:5px;" >Global League</p></a></td></tr>');
+            //$('#ll').append('<tr><td valign="middle" style="width:100%;text-align:center;font-size:12px;"><a href="#"><p id="ll" onclick="goLeague(-1)" style="background:#878788;color:white;padding:5px;" >Created League</p></a></td></tr>');
             $.each(msg.Leagues, function (i) {
-                $('#ll').append('<tr><td valign="middle" style="width:100%;text-align:center;font-size:12px;"><a href="#"><p id="ll' + i + '" onclick="goLeague(' + msg.Leagues[i].League_Id + ')" style="background:#878788;color:white;padding:5px;" >' + msg.Leagues[i].Name + '</p></a></td></tr>');
+                $('#ll').append('<tr><td valign="middle" style="width:100%;text-align:center;font-size:12px;"><a href="#"><p id="ll' + i + '" onclick="goLeague(' + msg.Leagues[i].League_Id + ')" style="background:#878788;color:white;padding:5px;" >' + msg.Leagues[i].Name + '</p></a></td><td><p  style="background:#878788;color:white;padding:5px;" >' + msg.Leagues[i].Code + '</p></td></tr>');
             });
 
             $.mobile.loading('hide');
@@ -1480,6 +1482,30 @@
         });
 
         request.fail(function (jqXHR, textStatus) {
+            alert("fail my league");
+            $.mobile.changePage($("#lost_connection_page"));
+        });
+
+         request = $.ajax({
+            url: "http://modedawebtest.co.uk/myvote/api/league/joined",
+            type: "POST",
+            data: "user_id=" + id
+        });
+
+        request.done(function (msg) {
+            
+            $('#lll').html('');
+            //$('#lll').append('<tr><td valign="middle" style="width:100%;text-align:center;font-size:12px;"><a href="#"><p id="ll" onclick="goLeague(-1)" style="background:#878788;color:white;padding:5px;" >Joined League</p></a></td></tr>');
+            $.each(msg.Leagues, function (i) {
+                $('#lll').append('<tr><td valign="middle" style="width:100%;text-align:center;font-size:12px;"><a href="#"><p id="ll' + i + '" onclick="goLeague(' + msg.Leagues[i].League_Id + ')" style="background:#878788;color:white;padding:5px;" >' + msg.Leagues[i].Name + '</p></a></td><td><p  style="background:#878788;color:white;padding:5px;" >' + msg.Leagues[i].Code + '</p></td></tr>');
+            });
+
+            $.mobile.loading('hide');
+            $.unblockUI();
+        });
+
+        request.fail(function (jqXHR, textStatus) {
+            alert("fail my league");
             $.mobile.changePage($("#lost_connection_page"));
         });
     });
@@ -1491,7 +1517,8 @@
         var page_counter = 0;
         var level = 0;
         var request = $.ajax({
-            url: "http://modedawebtest.co.uk/myvote/api/leaderboard/league?id=" + localStorage.getItem('league_view'),
+            //url: "http://modedawebtest.co.uk/myvote/api/leaderboard/league?id=" + localStorage.getItem('league_view'),
+            url: "http://modedawebtest.co.uk/myvote/api/leaderboard",
             type: "GET",
         });
 
@@ -3297,8 +3324,11 @@ a.tappable-active {
 			<div>
 				<center><img src="images/league_icon.png" /><center>
 			</div>
-			<center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:16px;">MY LEAGUES</p></center>
+			<center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:16px;">Created LEAGUES</p></center>
 			<table id="ll" cellspacing="0" cellpadding="5" style="width:100%;border-spacing: 0 10px;">
+			</table>
+            <center><p style="color:4a6f72;font-family: 'Ubuntu';font-size:16px;">Joined LEAGUES</p></center>
+			<table id="lll" cellspacing="0" cellpadding="5" style="width:100%;border-spacing: 0 10px;">
 			</table>
 		</div>
 	</div>
@@ -3326,14 +3356,14 @@ a.tappable-active {
 		</div>
 	
 	
-		<div data-role="footer" style="background:transparent;">
+		<!--<div data-role="footer" style="background:transparent;">
 			<div style="float:left;padding-left:20px;">
 				<img src="images/Back.png" id="pprev1" />
 			</div>
 			<div style="float:right;padding-right:20px;">
 				<img src="images/More.png" id="pnext1" />
 			</div>
-		</div>
+		</div>-->
 	</div>
 	
 	<script>
@@ -3439,7 +3469,7 @@ a.tappable-active {
 		</div>
 		
 		<div data-role="content">
-			<center></div>
+			
 			<div><center>
 				<img src="images/Vector-Smart-Object.png" style="padding-top:90px;" /></a>
 			</center></div>
