@@ -2161,11 +2161,7 @@
 	    function doFBLogin() {
 
 
-	        FB.getLoginStatus(function (response) {
-	            if (response.status == 'connected') {
-	                alert('logged in');
-	                getUserInfo();
-	            } else {
+	        
 	                FB.login(function (response) {
 	                    if (response.authResponse) {
 	                        var token = response.authResponse.accessToken;
@@ -2174,10 +2170,8 @@
 	                        console.log('Authorization failed.');
 	                    }
 	                }, { scope: 'email,user_birthday' });
-	                //scope – the set of fields we received from the server when login
-	                alert('not logged in');
-	            }
-	        });
+	                
+	       
 
 
 	    }
