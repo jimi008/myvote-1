@@ -153,6 +153,13 @@
             }, 500);
         });
         function onDeviceReady() {
+            //alert("hi");
+            //var ref = window.open('http://modedawebtest.co.uk/myvote/web1.1/redirect-to-shop.php?id= 192', '_blank', 'location=yes');
+            //      ref.addEventListener('loadstart', function(event) { alert('start: ' + event.url); });
+            //    ref.addEventListener('loadstop', function(event) { alert('stop: ' + event.url); });
+            //  ref.addEventListener('loaderror', function(event) { alert('error: ' + event.message); });
+            //ref.addEventListener('exit', function(event) { alert(event.type); });
+
 
             document.addEventListener("backbutton", onBackKeyDown, false);
             try {
@@ -465,8 +472,9 @@
         if (dd < 10) { dd = '0' + dd } if (mm < 10) { mm = '0' + mm } today = yyyy + '-' + mm + '-' + dd;
 
         var temp = localStorage.getItem('question_date');
-
+//alert(temp+"-"+today);
         if (!temp || temp != today) {
+            //alert("hi2");
             localStorage.removeItem('Q');
             localStorage.setItem('question_date', today);
 
@@ -478,9 +486,10 @@
 
                 request.done(function (msg) {
 
-                    $.mobile.loading('hide');
-                    $.unblockUI();
-
+                    //$.mobile.loading('hide');
+                    //$.unblockUI();
+                    //alert("hi");
+                    //alert(whatIsIt(msg.questions));
                     if (whatIsIt(msg.questions) == "Array") {
                         console.log(msg);
                         var questions = JSON.stringify(msg);
@@ -503,7 +512,7 @@
                     else {
                         $.mobile.loading('hide');
                         $.unblockUI();
-                        //alert(msg.questions);
+  //                      alert(msg.questions);
                         $.mobile.changePage($("#menu_page"));
                     }
 
@@ -516,7 +525,7 @@
                 });
             }
             catch (e) {
-
+                consol.log(e.message);
             }
             var request = $.ajax({
                 url: "http://modedawebtest.co.uk/myvote/api/question/types",
@@ -576,6 +585,7 @@
             else {
                 $.mobile.loading('hide');
                 $.unblockUI();
+    //            alert("tmp=tody");
                 $.mobile.changePage($("#menu_page"));
             }
 
@@ -2161,17 +2171,17 @@
 	    function doFBLogin() {
 
 
-	        
-	                FB.login(function (response) {
-	                    if (response.authResponse) {
-	                        var token = response.authResponse.accessToken;
-	                        getUserInfo();
-	                    } else {
-	                        console.log('Authorization failed.');
-	                    }
-	                }, { scope: 'email,user_birthday' });
-	                
-	       
+
+	        FB.login(function (response) {
+	            if (response.authResponse) {
+	                var token = response.authResponse.accessToken;
+	                getUserInfo();
+	            } else {
+	                console.log('Authorization failed.');
+	            }
+	        }, { scope: 'email,user_birthday' });
+
+
 
 
 	    }
@@ -2566,7 +2576,7 @@
 	<script>
 	    function opensite() {
 	        var id = localStorage.getItem('user_id');
-	        window.open(encodeURI('http://modedawebtest.co.uk/myvote/web1.1/redirect-to-shop.php?id=' + id), '_system');
+	        window.open(encodeURI('http://modedawebtest.co.uk/myvote/web1.1/redirect-to-shop.php?id=' + id), '_blank');
 	        //window.open('http://modedawebtest.co.uk/myvote/web1.1/redirect-to-shop.php?id='+id, '_blank');
 	    }
 	    function editContent(num) {
