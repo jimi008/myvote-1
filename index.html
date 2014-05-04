@@ -502,8 +502,8 @@
                         $.each(msg.questions, function (i) {
                             $('#q' + (i + 1) + '_question').text(msg.questions[i].Question);
                             $('#icon_q' + (i + 1)).append('<img src="U1/' + msg.questions[i].Question_Type + '.png" />');
-                            if (msg.questions[i].MediaType == "0") {
-                                $('#display_q' + (i + 1)).append('<iframe title="YouTube video player" class="youtube-player" type="text/html" width="220" height="130" src="' + msg.questions[i].MediaUrl + '" frameborder="0" allowFullScreen></iframe>');
+                            if (msg.questions[i].MediaType == "2") {
+                                $('#display_q' + (i + 1)).append('<iframe title="YouTube video player" class="youtube-player" type="text/html" width="220" height="130" src="http://' + msg.questions[i].MediaUrl + '" frameborder="0" allowFullScreen></iframe>');
                             }
                             else if (msg.questions[i].MediaType == "1") {
                                 $('#display_q' + (i + 1)).append('<img src="' + msg.questions[i].MediaUrl + '" />');
@@ -560,8 +560,8 @@
                 var question_asked = JSON.parse(localStorage.getItem('questions'));
                 $.each(question_asked.questions, function (i) {
                     $('#q' + (i + 1) + '_question').text(question_asked.questions[i].Question);
-                    if (question_asked.questions[i].MediaType == "0") {
-                        $('#display_q' + (i + 1)).append('<iframe title="YouTube video player" class="youtube-player" type="text/html" width="220" height="130" src="' + question_asked.questions[i].MediaUrl + '" frameborder="0" allowFullScreen></iframe>');
+                    if (question_asked.questions[i].MediaType == "2") {
+                        $('#display_q' + (i + 1)).append('<iframe title="YouTube video player" class="youtube-player" type="text/html" width="220" height="130" src="http://' + question_asked.questions[i].MediaUrl + '" frameborder="0" allowFullScreen></iframe>');
                     }
                     else if (question_asked.questions[i].MediaType == "1") {
                         $('#display_q' + (i + 1)).append('<img src="' + question_asked.questions[i].MediaUrl + '" />');
@@ -609,8 +609,8 @@
                         $.each(msg.questions, function (i) {
                             $('#q' + (i + 1) + '_question').text(msg.questions[i].Question);
                             $('#icon_q' + (i + 1)).append('<img src="U1/' + msg.questions[i].Question_Type + '.png" />');
-                            if (msg.questions[i].MediaType == "0") {
-                                $('#display_q' + (i + 1)).append('<iframe title="YouTube video player" class="youtube-player" type="text/html" width="220" height="130" src="' + msg.questions[i].MediaUrl + '" frameborder="0" allowFullScreen></iframe>');
+                            if (msg.questions[i].MediaType == "2") {
+                                $('#display_q' + (i + 1)).append('<iframe title="YouTube video player" class="youtube-player" type="text/html" width="220" height="130" src="http://' + msg.questions[i].MediaUrl + '" frameborder="0" allowFullScreen></iframe>');
                             }
                             else if (msg.questions[i].MediaType == "1") {
                                 $('#display_q' + (i + 1)).append('<img src="' + msg.questions[i].MediaUrl + '" />');
@@ -874,6 +874,7 @@
 
         $('#logout').click(function (e) {
             localStorage.removeItem('logged_in');
+            localStorage.removeItem('Q');
             $.mobile.changePage($("#loginpage"));
         });
 
@@ -1009,12 +1010,15 @@
         $.mobile.loading('show', { text: 'Loading', textVisible: true, theme: 'b', html: "" });
         $('#Points_rp').text(localStorage.getItem('points'));
         var id = localStorage.getItem('user_id');
+       
         var request = $.ajax({
             url: "http://modedawebtest.co.uk/myvote/api/answer?id=" + id,
             type: "GET",
         });
 
         request.done(function (msg) {
+console.log(msg);
+
 
             $('#q1_tab #q1').text("Q1. " + msg[0].Question);
             $('#q2_tab #q2').text("Q2. " + msg[1].Question);
@@ -1034,16 +1038,6 @@
 
                 if (msg[0].Answer == "0") {
                     if (msg[0].Crowd == "0") {
-                        $('#r1 div:nth-child(3)').text("YES / OUT");
-                    }
-                    else {
-                        $('#r1 div:nth-child(3)').text("YES / IN");
-                    }
-                    $("#r1 .greenyes").show();
-                    $("#r1 .grayno").hide();
-                }
-                else if (msg[0].Answer == "1") {
-                    if (msg[0].Crowd == "0") {
                         $('#r1 div:nth-child(3)').text("NO / OUT");
                     }
                     else {
@@ -1051,6 +1045,18 @@
                     }
                     $("#r1 .greenyes").hide();
                     $("#r1 .grayno").show();
+                }
+                else if (msg[0].Answer == "1") {
+                    if (msg[0].Crowd == "0") {
+                    $('#r1 div:nth-child(3)').text("YES / OUT");
+                        
+                    }
+                    else {
+                    $('#r1 div:nth-child(3)').text("YES / IN");
+                        
+                    }
+                    $("#r1 .greenyes").show();
+                    $("#r1 .grayno").hide();
                 }
 
                 $('#r2 .votedin').text("" + msg[0].Crowd.Percent + "% CROWD VOTED IN");
@@ -1062,7 +1068,6 @@
             }
 
 
-
             if (msg[1].Answer == "-1") {
                 $('#r11,#r12,#r13').hide();
                 $('#r11').parent().css('height', '50px');
@@ -1072,25 +1077,26 @@
 
                 if (msg[1].Answer == "0") {
                     if (msg[1].Crowd == "0") {
-
-                        $('#r11 div:nth-child(3)').text("YES / OUT");
+$('#r11 div:nth-child(3)').text("NO / OUT");
+                       
                     }
                     else {
-                        $('#r11 div:nth-child(3)').text("YES / IN");
-                    }
-                    $("#r11 .greenyes").show();
-                    $("#r11 .grayno").hide();
-                }
-                else if (msg[1].Answer == "1") {
-                    if (msg[1].Crowd == "0") {
-
-                        $('#r11 div:nth-child(3)').text("NO / OUT");
-                    }
-                    else {
-                        $('#r11 div:nth-child(3)').text("NO / IN");
+                       $('#r11 div:nth-child(3)').text("NO / IN"); 
                     }
                     $("#r11 .greenyes").hide();
                     $("#r11 .grayno").show();
+                }
+                else if (msg[1].Answer == "1") {
+                    if (msg[1].Crowd == "0") {
+ $('#r11 div:nth-child(3)').text("YES / OUT");
+                        
+                    }
+                    else {
+                    $('#r11 div:nth-child(3)').text("YES / IN");
+                        
+                    }
+                    $("#r11 .greenyes").show();
+                    $("#r11 .grayno").hide();
                 }
 
                 $('#r12 .votedin').text("" + msg[1].Crowd.Percent + "% CROWD VOTED IN");
@@ -1110,24 +1116,26 @@
                 $('#r21,#r22,#r23').show();
                 if (msg[2].Answer == "0") {
                     if (msg[2].Crowd == "0") {
-                        $('#r21 div:nth-child(3)').text("YES / OUT");
+                       $('#r21 div:nth-child(3)').text("NO / OUT");
                     }
                     else {
-                        $('#r21 div:nth-child(3)').text("YES / IN");
+                       $('#r21 div:nth-child(3)').text("NO / IN");
                     }
-                    $("#r21 .greenyes").show();
-                    $("#r21 .grayno").hide();
+                    $("#r21 .greenyes").hide();
+                    $("#r21 .grayno").show();
                 }
                 else if (msg[2].Answer == "1") {
                     if (msg[2].Crowd == "0") {
 
-                        $('#r21 div:nth-child(3)').text("NO / OUT");
+                        
+                         $('#r21 div:nth-child(3)').text("YES / OUT");
                     }
                     else {
-                        $('#r21 div:nth-child(3)').text("NO / IN");
+                     $('#r21 div:nth-child(3)').text("YES / IN");
+                        
                     }
-                    $("#r21 .greenyes").hide();
-                    $("#r21 .grayno").show();
+                    $("#r21 .greenyes").show();
+                    $("#r21 .grayno").hide();
                 }
 
                 $('#r22 .votedin').text("" + msg[2].Crowd.Percent + "% CROWD VOTED IN");
