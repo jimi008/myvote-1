@@ -89,25 +89,18 @@
             });
         });
         $('#instruction_rewards').live("swipeleft", function () {
-            $.mobile.changePage("#menu_page", {
-                transition: "slide",
-                reverse: false
-            });
+            $.mobile.changePage("#menu_page", {transition:"slide"});
         });
         $('#charter_page').live("swipeleft", function () {
             if ($("input[type='radio'][name='charter']:checked").val() == "0") {
                 localStorage.setItem('read_instr', '1');
-                $.mobile.changePage("#loginpage", {
-                    transition: "slide",
-                    reverse: false
-                });
+                $.mobile.changePage("#loginpage" ,{transition:"slide"});
             }
         });
 
         $('#instruction_game').live("swiperight", function () {
             $.mobile.changePage("#instruction_mix", {
-                transition: "slide",
-                reverse: true
+                transition: "slide"
             });
         });
 
@@ -135,17 +128,14 @@
 
         $('#update_profile').live("swiperight", function () {
             $.mobile.changePage("#menu_page", {
-                transition: "slide",
-                reverse: true
+                transition: "slide"
             });
         });
 
         $(".menulink").click(function () {
             $(this).addClass('box_rotate box_transition');
             setTimeout(function () {
-                $.mobile.changePage("#menu_page", {
-                    transition: "slide"
-                });
+                $.mobile.changePage($("#menu_page"),{transition:"slide"});
                 //alert($(this).attr('class'));
                 $(".menulink").removeClass('box_rotate');
                 $(".menulink").removeClass('box_transition');
@@ -415,7 +405,7 @@
         });
 
         $('#league_option').click(function (e) {
-            $.mobile.changePage($("#league_page"));
+            $.mobile.changePage($("#league_page"),{transition:"slide"});
         });
 
         $('#invite_option').click(function (e) {
@@ -645,6 +635,7 @@
             localStorage.setItem('q_answer', '-1');
             localStorage.setItem('q_crowd', '-1');
             $('#q1_yes').click(function (e) {
+                console.log("q1yes");
                 localStorage.setItem('q_answer', '0');
                 $("#q1_no").fadeOut("slow");
                 if (localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1') {
@@ -653,6 +644,7 @@
             });
 
             $('#q1_no').click(function (e) {
+                console.log("q1no");
                 localStorage.setItem('q_answer', '1');
                 $("#q1_yes").fadeOut("slow");
                 if (localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1') {
@@ -661,6 +653,7 @@
             });
 
             $('#q1_in_crowd').click(function (e) {
+                console.log("q1in");
                 localStorage.setItem('q_crowd', '0');
                 $("#q1_out_crowd").fadeOut("slow");
                 if (localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1') {
@@ -669,14 +662,15 @@
             });
 
             $('#q1_out_crowd').click(function (e) {
-                localStorage.setItem('q_crowd', '-1');
+                console.log("q1out");
+                localStorage.setItem('q_crowd', '1');
                 $("#q1_in_crowd").fadeOut("slow");
                 if (localStorage.getItem('q_answer') != '-1' && localStorage.getItem('q_crowd') != '-1') {
                     $.fn.q1_answer();
                 }
             });
             $.fn.q1_answer = function () {
-
+                console.log("q1ans ");
                 var user_id = localStorage.getItem('user_id');
                 var question_asked = JSON.parse(localStorage.getItem('questions'));
                 var question_id = question_asked.questions[0].Question_Id;
@@ -684,6 +678,7 @@
                 var str = "user_id=" + user_id + "&question_id=" + question_id + "&answer=" + localStorage.getItem('q_answer') + "&crowd=" + localStorage.getItem('q_crowd') + "&peer=-1&points_bet=0&points=0";
                 localStorage.removeItem('q_answer');
                 localStorage.removeItem('q_crowd');
+                console.log(str);
                 var request = $.ajax({
                     url: "http://modedawebtest.co.uk/myvote/api/answer",
                     type: "POST",
@@ -968,7 +963,8 @@
             }
 
             if (msg[0].Birth_Date) {
-                $('#l2').text(msg[0].Birth_Date);
+            //reformatDate(msg[0].Birth_Date)
+                $('#l2').text(reformatDate(msg[0].Birth_Date));
             }
             else {
                 $('#l2').text("empty");
@@ -1010,14 +1006,14 @@
         $.mobile.loading('show', { text: 'Loading', textVisible: true, theme: 'b', html: "" });
         $('#Points_rp').text(localStorage.getItem('points'));
         var id = localStorage.getItem('user_id');
-       
+
         var request = $.ajax({
             url: "http://modedawebtest.co.uk/myvote/api/answer?id=" + id,
             type: "GET",
         });
 
         request.done(function (msg) {
-console.log(msg);
+            console.log(msg);
 
 
             $('#q1_tab #q1').text("Q1. " + msg[0].Question);
@@ -1037,7 +1033,7 @@ console.log(msg);
                 $('#r1,#r2,#r3').show();
 
                 if (msg[0].Answer == "0") {
-                    if (msg[0].Crowd == "0") {
+                    if (msg[0].Crowd.Inout == "0") {
                         $('#r1 div:nth-child(3)').text("NO / OUT");
                     }
                     else {
@@ -1047,13 +1043,13 @@ console.log(msg);
                     $("#r1 .grayno").show();
                 }
                 else if (msg[0].Answer == "1") {
-                    if (msg[0].Crowd == "0") {
-                    $('#r1 div:nth-child(3)').text("YES / OUT");
-                        
+                    if (msg[0].Crowd.Inout == "0") {
+                        $('#r1 div:nth-child(3)').text("YES / OUT");
+
                     }
                     else {
-                    $('#r1 div:nth-child(3)').text("YES / IN");
-                        
+                        $('#r1 div:nth-child(3)').text("YES / IN");
+
                     }
                     $("#r1 .greenyes").show();
                     $("#r1 .grayno").hide();
@@ -1076,24 +1072,24 @@ console.log(msg);
                 $('#r11,#r12,#r13').show();
 
                 if (msg[1].Answer == "0") {
-                    if (msg[1].Crowd == "0") {
-$('#r11 div:nth-child(3)').text("NO / OUT");
-                       
+                    if (msg[1].Crowd.Inout == "0") {
+                        $('#r11 div:nth-child(3)').text("NO / OUT");
+
                     }
                     else {
-                       $('#r11 div:nth-child(3)').text("NO / IN"); 
+                        $('#r11 div:nth-child(3)').text("NO / IN");
                     }
                     $("#r11 .greenyes").hide();
                     $("#r11 .grayno").show();
                 }
                 else if (msg[1].Answer == "1") {
-                    if (msg[1].Crowd == "0") {
- $('#r11 div:nth-child(3)').text("YES / OUT");
-                        
+                    if (msg[1].Crowd.Inout == "0") {
+                        $('#r11 div:nth-child(3)').text("YES / OUT");
+
                     }
                     else {
-                    $('#r11 div:nth-child(3)').text("YES / IN");
-                        
+                        $('#r11 div:nth-child(3)').text("YES / IN");
+
                     }
                     $("#r11 .greenyes").show();
                     $("#r11 .grayno").hide();
@@ -1115,24 +1111,24 @@ $('#r11 div:nth-child(3)').text("NO / OUT");
             else {
                 $('#r21,#r22,#r23').show();
                 if (msg[2].Answer == "0") {
-                    if (msg[2].Crowd == "0") {
-                       $('#r21 div:nth-child(3)').text("NO / OUT");
+                    if (msg[2].Crowd.Inout == "0") {
+                        $('#r21 div:nth-child(3)').text("NO / OUT");
                     }
                     else {
-                       $('#r21 div:nth-child(3)').text("NO / IN");
+                        $('#r21 div:nth-child(3)').text("NO / IN");
                     }
                     $("#r21 .greenyes").hide();
                     $("#r21 .grayno").show();
                 }
                 else if (msg[2].Answer == "1") {
-                    if (msg[2].Crowd == "0") {
+                    if (msg[2].Crowd.Inout == "0") {
 
-                        
-                         $('#r21 div:nth-child(3)').text("YES / OUT");
+
+                        $('#r21 div:nth-child(3)').text("YES / OUT");
                     }
                     else {
-                     $('#r21 div:nth-child(3)').text("YES / IN");
-                        
+                        $('#r21 div:nth-child(3)').text("YES / IN");
+
                     }
                     $("#r21 .greenyes").show();
                     $("#r21 .grayno").hide();
@@ -1674,7 +1670,7 @@ $('#r11 div:nth-child(3)').text("NO / OUT");
             }
 
             else if (page_counter == 0) {
-                $.mobile.changePage($("#my_league"));
+                $.mobile.changePage($("#my_league"),{transition:"slide"});
             }
         });
     });
@@ -1682,13 +1678,13 @@ $('#r11 div:nth-child(3)').text("NO / OUT");
     $('#league_page').live('pageshow', function (event, ui) {
         $('#Points_lp').text(localStorage.getItem('points'));
         $('#create_league_option').click(function (e) {
-            $.mobile.changePage($("#create_league"));
+            $.mobile.changePage($("#create_league"),{transition:"slide"});
         });
         $('#join_league_option').click(function (e) {
-            $.mobile.changePage($("#join_league"));
+            $.mobile.changePage($("#join_league"),{transition:"slide"});
         });
         $('#my_league_option').click(function (e) {
-            $.mobile.changePage($("#my_league"));
+            $.mobile.changePage($("#my_league"),{transition:"slide"});
         });
     });
 
@@ -2469,7 +2465,7 @@ $('#r11 div:nth-child(3)').text("NO / OUT");
 	<!-- Question 1 page -->
 	<div data-role="page" id="question_one_page" data-theme="d">
         <div data-role="header" style="padding: 10px;">
-			<img src="images/MenuIconcopy8.png" style="height: 30px;" />
+			<img src="images/MenuIconcopy8.png" style="height: 30px;"  class="menulink" />
 			<div class="points_d">
 			<table>
 					<tr><td>
@@ -2509,7 +2505,7 @@ $('#r11 div:nth-child(3)').text("NO / OUT");
 	<!-- Question 2 page -->
 	<div data-role="page" id="question_two_page" data-theme="d">
         <div data-role="header" style="padding: 10px;">
-			<img src="images/MenuIconcopy8.png" style="height: 30px;" />
+			<img src="images/MenuIconcopy8.png" style="height: 30px;"  class="menulink" />
 			<div class="points_d">
 			<table>
 					<tr><td>
@@ -2549,7 +2545,7 @@ $('#r11 div:nth-child(3)').text("NO / OUT");
 	<!-- Question 3 page -->
 	<div data-role="page" id="question_three_page" data-theme="d">
         <div data-role="header" style="padding: 10px;">
-			<img src="images/MenuIconcopy8.png" style="height: 30px;" />
+			<img src="images/MenuIconcopy8.png" style="height: 30px;"  class="menulink" />
 			<div class="points_d">
 			<table>
 					<tr><td>
@@ -2589,7 +2585,7 @@ $('#r11 div:nth-child(3)').text("NO / OUT");
 	<!-- Question page -->
 	<div data-role="page" id="question_page" data-theme="d">
         <div data-role="header" style="padding: 10px;">
-			<img src="images/MenuIconcopy8.png" style="height: 30px;" />
+			<img src="images/MenuIconcopy8.png" style="height: 30px;"  class="menulink" />
 			<div class="points_d">
 			<table>
 					<tr><td>
@@ -2645,7 +2641,7 @@ $('#r11 div:nth-child(3)').text("NO / OUT");
 	                    $('#p' + num).append('<input type="text" name="t' + num + '" id="t' + num + '"></input>');
 	                }
 	                else {
-	                    $('#p' + num).append('<input type="text" value="' + reformatDate(str) + '" name="t' + num + '" id="t' + num + '"></input>');
+	                    $('#p' + num).append('<input type="text" value="' + str + '" name="t' + num + '" id="t' + num + '"></input>');
 	                }
 	                $('#e' + num).show();
 	            }
@@ -2764,7 +2760,7 @@ $('#r11 div:nth-child(3)').text("NO / OUT");
 	                            return false;
 	                        }
 	                        str = str + "&dob=" + formatDate($('#t2').val());
-	                        temp = formatDate($('#t2').val()).replace("/", "-").replace("/", "-");
+	                        temp = reformatDate(formatDate($('#t2').val()).replace("/", "-").replace("/", "-"));
 	                    }
 	                    else {
 	                        alert('Invalid Date of Birth');
