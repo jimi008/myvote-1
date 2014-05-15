@@ -385,7 +385,19 @@
         $('#Points_mp').text(localStorage.getItem('points'));
         $('#game_option').click(function (e) {
             if (localStorage.getItem('Q')) {
+            var today = new Date();
+                    if(localStorage.getItem('QDoneDate' )==today.getDate())
+                    {
+                    
+                    
                 alert("Check out Team Vote to play some more!");
+                
+                }
+                else
+                {
+                $.mobile.changePage($("#question_one_page"));
+                }
+                
             }
             else {
                 $.mobile.changePage($("#question_one_page"));
@@ -531,9 +543,9 @@
                 console.log(msg);
                 var questions_t = JSON.stringify(msg);
                 localStorage.setItem('questions_types', questions_t);
-                //$.each(msg.questions_types, function (i) {
-                //  $('#icon_q' + (i + 1)).append('<img src="U1/' + msg.questions_types[i].id + '.png" />');
-                //});
+                $.each(msg.questions_types, function (i) {
+                  $('#icon_q' + (i + 1)).append('<img src="U1/' + msg.questions_types[i].id + '.png" />');
+                });
                 load = load + 1;
             });
 
@@ -626,7 +638,7 @@
             }
 
 
-
+ console.log("load==2");
             if (load == 2) {
                 $.mobile.loading('hide');
                 $.unblockUI();
@@ -842,6 +854,8 @@
                 console.log(msg);
                 if (msg.success == 1) {
                     localStorage.setItem('Q', 'done');
+                    var today = new Date();
+                    localStorage.setItem('QDoneDate', today.getDate());
                     localStorage.removeItem('Q1');
                     localStorage.removeItem('Q2');
                     $.mobile.changePage($("#menu_page"), "slide", true, true);
@@ -2130,7 +2144,7 @@
     .box_transition {
         -webkit-transition: all 1.0s ease-out; /* Chrome 1-25, Safari 3.2+ */
         -moz-transition: all 1.0s ease-out; /* Firefox 4-15 */
-        -o-transition: all 1.0s ease-out; /* Opera 10.50–12.00 */
+        -o-transition: all 1.0s ease-out; /* Opera 10.50ï¿½12.00 */
         transition: all 1.0s ease-out; /* Chrome 26, Firefox 16+, IE 10+, Opera 12.50+ */
     }
 
@@ -2151,6 +2165,7 @@
             font-weight: normal;
             color: #6f8383;
         }
+        
 </style>
 </head>
 
