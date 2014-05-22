@@ -143,19 +143,10 @@
             }, 500);
         });
         function onDeviceReady() {
-            //alert("hi");
-            //var ref = window.open('http://modedawebtest.co.uk/myvote/web1.1/redirect-to-shop.php?id= 192', '_blank', 'location=yes');
-            //      ref.addEventListener('loadstart', function(event) { alert('start: ' + event.url); });
-            //    ref.addEventListener('loadstop', function(event) { alert('stop: ' + event.url); });
-            //  ref.addEventListener('loaderror', function(event) { alert('error: ' + event.message); });
-            //ref.addEventListener('exit', function(event) { alert(event.type); });
-
 
             document.addEventListener("backbutton", onBackKeyDown, false);
             try {
-                //alert('Device is ready! Make sure you set your app_id below this alert.');
-                FB.init({ appId: "691773454197271", nativeInterface: CDV.FB, useCachedDialogs: false });
-                //alert('fbinit');
+                FB.init({ appId: "510754562362091", nativeInterface: CDV.FB, useCachedDialogs: false });
                 document.getElementById('data').innerHTML = "";
             } catch (e) {
                 alert("exception:" + e);
@@ -208,8 +199,8 @@
     });
 
     //script for login_page
-    $('#loginpage').live('pageshow', function (e) {
-        $("#lp_continue").click(function (e) {
+    //$('#loginpage').live('pageshow', function (e) {
+        $("#lp_continue").live('click', function (e) {
             if ($('#txtEmail').val() == "" || $('#txtPassword').val() == "") {
                 alert("Please fill in all the details.");
             }
@@ -261,12 +252,14 @@
             }
         });
 
-        $("#register").click(function (e) {
-            $.mobile.changePage($("#register_page"));
-        });
+        
 
-    });
-
+    //});
+	
+	$("#register").live('click', function (e) {
+		$.mobile.changePage($("#register_page"));
+	});
+	
     //Script for instruction_sm page
     /*	$('#instruction_sm').live('pageshow', function(e){
             $('#forward').click(function(e){
@@ -296,8 +289,8 @@
         });*/
 
     //Script for register page
-    $('#register_page').live('pagecreate', function (e) {
-        $("#rp_continue").click(function (e) {
+    //$('#register_page').live('pagecreate', function (e) {
+        $("#rp_continue").live('click', function (e) {
             if ($('#name').val() == "" || $('#dob').val() == "" || $('#city').val() == "" || ($("input[name*=sex]:checked").val() != "0" && $("input[name*=sex]:checked").val() != "1")) {
                 alert("Please fill in all the details.");
             }
@@ -378,53 +371,44 @@
             }
 
         });
-    });
+    //});
 
     //Script for menu_page
     $('#menu_page').live('pageshow', function (e) {
         $('#Points_mp').text(localStorage.getItem('points'));
-        $('#game_option').click(function (e) {
-            if (localStorage.getItem('Q')) {
-            var today = new Date();
-                    if(localStorage.getItem('QDoneDate' )==today.getDate())
-                    {
-                    
-                    
-                alert("Check out Team Vote to play some more!");
-                
-                }
-                else
-                {
-                $.mobile.changePage($("#question_one_page"));
-                }
-                
-            }
-            else {
-                $.mobile.changePage($("#question_one_page"));
-            }
-        });
-
-        $('#profile_option').click(function (e) {
-            $.mobile.changePage($("#update_profile"));
-        });
-
-        $('#results_option').click(function (e) {
-            $.mobile.changePage($("#results_page"));
-        });
-
-        $('#premiership_select_option').click(function (e) {
-            $.mobile.changePage($("#premiership_select"));
-        });
-
-        $('#league_option').click(function (e) {
-            $.mobile.changePage($("#league_page"),{transition:"slide"});
-        });
-
-        $('#invite_option').click(function (e) {
-            $.mobile.changePage($("#invite_page"));
-        });
+       
 
     });
+	
+	 $('#game_option').live('click', function (e) {
+		if (localStorage.getItem('Q')) {
+			alert("Check out Team Vote to play some more!");
+		}
+		else {
+			$.mobile.changePage($("#question_one_page"));
+		}
+	});
+
+	$('#profile_option').live('click', function (e) {
+		$.mobile.changePage($("#update_profile"));
+	});
+
+	$('#results_option').live('click', function (e) {
+		$.mobile.changePage($("#results_page"));
+	});
+
+	$('#premiership_select_option').live('click', function (e) {
+		$.mobile.changePage($("#premiership_select"));
+	});
+
+	$('#league_option').live('click', function (e) {
+		$.mobile.changePage($("#league_page"),{transition:"slide"});
+	});
+
+	$('#invite_option').live('click', function (e) {
+		$.mobile.changePage($("#invite_page"));
+	});
+		
     function isArray(what) {
         return Object.prototype.toString.call(what) === '[object Array]';
     }
@@ -543,9 +527,9 @@
                 console.log(msg);
                 var questions_t = JSON.stringify(msg);
                 localStorage.setItem('questions_types', questions_t);
-                $.each(msg.questions_types, function (i) {
-                  $('#icon_q' + (i + 1)).append('<img src="U1/' + msg.questions_types[i].id + '.png" />');
-                });
+                //$.each(msg.questions_types, function (i) {
+                //  $('#icon_q' + (i + 1)).append('<img src="U1/' + msg.questions_types[i].id + '.png" />');
+                //});
                 load = load + 1;
             });
 
@@ -638,7 +622,7 @@
             }
 
 
- console.log("load==2");
+
             if (load == 2) {
                 $.mobile.loading('hide');
                 $.unblockUI();
@@ -854,8 +838,6 @@
                 console.log(msg);
                 if (msg.success == 1) {
                     localStorage.setItem('Q', 'done');
-                    var today = new Date();
-                    localStorage.setItem('QDoneDate', today.getDate());
                     localStorage.removeItem('Q1');
                     localStorage.removeItem('Q2');
                     $.mobile.changePage($("#menu_page"), "slide", true, true);
@@ -880,12 +862,9 @@
         $('#redeemed').text("points redeemed  : " + localStorage.getItem('redeemed'));
 
         var id = localStorage.getItem('user_id');
+        console.log("Requesting profile for id: "+id);
 
-        $('#logout').click(function (e) {
-            localStorage.removeItem('logged_in');
-            localStorage.removeItem('Q');
-            $.mobile.changePage($("#loginpage"));
-        });
+        
 
         var request = $.ajax({
             url: "http://modedawebtest.co.uk/myvote/api/user?id=" + id,
@@ -893,7 +872,7 @@
         });
 
         request.done(function (msg) {
-            console.log(msg);
+            console.log(JSON.stringify(msg));
 
             var request = $.ajax({
                 url: "http://modedawebtest.co.uk/myvote/api/user/profile?id=" + id,
@@ -901,7 +880,7 @@
             });
 
             request.done(function (msg) {
-
+				console.log("Profile: "+JSON.stringify(msg));
                 if (msg[0].Fav_TeamSport) {
                     $('#l5').text(msg[0].Fav_TeamSport);
                 }
@@ -1013,6 +992,12 @@
         });
 
     });
+	
+	$('#logout').live('click', function (e) {
+		localStorage.removeItem('logged_in');
+		localStorage.removeItem('Q');
+		$.mobile.changePage($("#loginpage"));
+	});
 
     //Script for results_page
     $('#results_page').live('pageshow', function (e) {
@@ -1343,7 +1328,11 @@
         }
         $.mobile.loading('hide');
         $.unblockUI();
-        $('#cl_continue').click(function (e) {
+        
+
+    });
+	
+	$('#cl_continue').live('click', function (e) {
             if (!localStorage.getItem('league_code')) {
                 if ($('#league_name').val() == "") {
                     alert('Please specify the League Name.');
@@ -1384,12 +1373,10 @@
                 }
             }
         });
-
-        $('#cl_continue1').click(function (e) {
+	
+	 $('#cl_continue1').live('click', function (e) {
             $.mobile.changePage($("#menu_page"));
         });
-
-    });
 
     $('#join_league').live('pageshow', function (event, ui) {
         $('#Points_jlp').text(localStorage.getItem('points'));
@@ -1691,16 +1678,18 @@
 
     $('#league_page').live('pageshow', function (event, ui) {
         $('#Points_lp').text(localStorage.getItem('points'));
-        $('#create_league_option').click(function (e) {
-            $.mobile.changePage($("#create_league"),{transition:"slide"});
-        });
-        $('#join_league_option').click(function (e) {
-            $.mobile.changePage($("#join_league"),{transition:"slide"});
-        });
-        $('#my_league_option').click(function (e) {
-            $.mobile.changePage($("#my_league"),{transition:"slide"});
-        });
+        
     });
+	
+	$('#create_league_option').live('click', function (e) {
+		$.mobile.changePage($("#create_league"),{transition:"slide"});
+	});
+	$('#join_league_option').live('click', function (e) {
+		$.mobile.changePage($("#join_league"),{transition:"slide"});
+	});
+	$('#my_league_option').live('click',function (e) {
+		$.mobile.changePage($("#my_league"),{transition:"slide"});
+	});
 
     $('#invite_credential_page').live('pageshow', function (event, ui) {
         $('#Points_icp').text(localStorage.getItem('points'));
@@ -2144,7 +2133,7 @@
     .box_transition {
         -webkit-transition: all 1.0s ease-out; /* Chrome 1-25, Safari 3.2+ */
         -moz-transition: all 1.0s ease-out; /* Firefox 4-15 */
-        -o-transition: all 1.0s ease-out; /* Opera 10.50ï¿½12.00 */
+        -o-transition: all 1.0s ease-out; /* Opera 10.50-12.00 */
         transition: all 1.0s ease-out; /* Chrome 26, Firefox 16+, IE 10+, Opera 12.50+ */
     }
 
@@ -2165,7 +2154,6 @@
             font-weight: normal;
             color: #6f8383;
         }
-        
 </style>
 </head>
 
@@ -2193,7 +2181,7 @@
         </div>
 		<div data-role="content">
 			<div style="padding-top:60px;">
-			<center><img src="images/SigninWithFacebookTw.png" id="loginfb" onclick="doFBLogin()"></center>
+			<center><img src="images/SigninWithFacebookTw.png" id="loginfb" onClick="doFBLogin()"></center>
 			</div>
 			
 			<div style="padding-top:40px;">
@@ -2223,11 +2211,12 @@
 	</div>
 	
 	<script>
-	    //initialize settings  
+	    //initialize settings 
+		//appId: '510754562362091', //appId of your Facebook app  
 	    window.fbAsyncInit = function () {
 	        FB.init({
-	            appId: '691773454197271', //appId of your Facebook app  
-	            status: true,
+	            appId: '510754562362091',
+				status: true,
 	            cookie: true,
 	            xfbml: true,
 	            oauth: true
@@ -2245,54 +2234,58 @@
 	            } else {
 	                console.log('Authorization failed.');
 	            }
-	        }, { scope: 'email,user_birthday' });
+	        }, { scope: 'email,user_birthday,user_location' });
 
 
 
 
 	    }
-
+		
+		
+		
 	    function getUserInfo() {
 	        //alert("getuser");
 	        FB.api('/me', function (response) {
-
-	            var firstname, lastname, gender, dob, email, city, state, country;
+				//alert(JSON.stringify(response));
+	            var firstname, lastname, gender, dob, email, city, state, country,sex;
 	            if (response.first_name) {
-	                var firstname = response.first_name;
+	                firstname = response.first_name;
 	            }
 
 	            if (response.last_name) {
-	                var lastname = response.last_name;
+	                lastname = response.last_name;
 	            }
 
-	            if (response.gender) {
-	                if (response.gender == "male") {
-	                    var sex = "0";
-	                }
-	                else if (response.gender == "female") {
-	                    var sex = "1";
-	                }
-	            }
+	             if (response.gender) {
+		            if (response.gender == "male") {
+		                sex = "2";
+		            }
+		            else if (response.gender == "female") {
+		                sex = "1";
+		            }
+		        }
 
 	            if (response.birthday) {
-	                var dob = response.birthday;
+	                dob = response.birthday;
+		            var darr = dob.split('/');
+		            dob = darr[2] + "-" + darr[1] + "-" + darr[0];
 	            }
 
 	            if (response.email) {
-	                var email = response.email;
+	                email = response.email;
 	            }
 
-	            if (response.location.name) {
+	            if (response.location) {
 	                var location = response.location.name;
-	                var locations = location.split(", ");
-	                var city = locations[0];
-	                var state = locations[1];
-	                var country = locations[2];
+	                var locations = location.split(",");
+	                city = locations[0];
+	                state = locations[1];
+	                country = locations[2];
 	            }
 
-	            //var str = "&firstname=" + firstname + "&lastname=" + lastname + "&sex=" + sex + "&dob=" + dob + "&email=" + email + "&city=" + city + "&state=" + state + "&country=" + country + "&login_type=2";
+	            var str = "&firstname=" + firstname + "&lastname=" + lastname + "&sex=" + sex + "&dob=" + dob + "&email=" + email + "&city=" + city + "&state=" + state + "&country=" + country + "&login_type=2";
 	            //alert(str);
-	            var str = "&email=" + email + "&city=" + city + "&state=" + state + "&country=" + country + "&login_type=2";
+	            //var str = "&email=" + email + "&city=" + city + "&state=" + state + "&country=" + country + "&login_type=2";
 	            var request = $.ajax({
 	                url: "http://modedawebtest.co.uk/myvote/api/user/register",
 	                type: "POST",
@@ -2301,7 +2294,7 @@
 
 	            request.done(function (msg) {
 	                //alert(msg);
-	                console.log(msg);
+	                console.log(JSON.stringify(msg));
 	                if (msg.user_id == -1) {
 	                    alert("Server Error. Please try again");
 	                }
@@ -2316,7 +2309,7 @@
 	                    });
 
 	                    request.done(function (msg) {
-	                        console.log(msg);
+	                        console.log(JSON.stringify(msg));
 	                        //localStorage.setItem('points', msg[0].Points);
 	                        localStorage.setItem('points', msg.Points);
 	                        localStorage.setItem('redeemed', msg.redeemed);
@@ -2472,7 +2465,7 @@
 			<a href="#"><img src="images/Results.png" id="results_option"></a>
 			<a href="#"><img src="images/League.png" id="league_option"></a>
 			<a href="#"><img src="images/Invite.png" id="invite_option"></a>
-			<a href="#" onclick="opensite();"><img src="images/Rewards.png" id="rewards_option"></a>
+			<a href="#" onClick="opensite();"><img src="images/Rewards.png" id="rewards_option"></a>
 			</div>
 		</div>
 	</div>
@@ -2917,62 +2910,62 @@
 				<table>
 				<tr>
 					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Name:</td>
-					<td width="55%" align="left" valign="middle" id="p1" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l1" onclick="editContent('1')" style="color:black;"></a></td>
-					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e1" onclick="updateContent('1')" style="display:none;color:green;">edit</a></td>
+					<td width="55%" align="left" valign="middle" id="p1" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l1" onClick="editContent('1')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e1" onClick="updateContent('1')" style="display:none;color:green;">edit</a></td>
 				</tr>
 				
 				<tr>
 					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Date of birth:</td>
-					<td width="55%" align="left" valign="middle"  id="p2" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l2" onclick="editContent('2')" style="color:black;"></a></td>
-					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e2" onclick="updateContent('2')" style="display:none;color:green;">edit</a></td>
+					<td width="55%" align="left" valign="middle"  id="p2" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l2" onClick="editContent('2')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e2" onClick="updateContent('2')" style="display:none;color:green;">edit</a></td>
 				</tr>
 				
 				<tr>
 					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Gender:</td>
-					<td width="55%" align="left" valign="middle" id="p3" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l3" onclick="editContent('3')" style="color:black;"></a></td>
-					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e3" onclick="updateContent('3')" style="display:none;color:green;">edit</a></td>
+					<td width="55%" align="left" valign="middle" id="p3" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l3" onClick="editContent('3')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e3" onClick="updateContent('3')" style="display:none;color:green;">edit</a></td>
 				</tr>
 				
 				<tr>
 					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Location:</td>
-					<td width="55%" align="left" valign="middle" id="p4" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l4" onclick="editContent('4')" style="color:black;"></a></td>
-					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e4" onclick="updateContent('4')" style="display:none;color:green;">edit</a></td>
+					<td width="55%" align="left" valign="middle" id="p4" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l4" onClick="editContent('4')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e4" onClick="updateContent('4')" style="display:none;color:green;">edit</a></td>
 				</tr>
 				
 				<tr>
 					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Favourite team sport:</td>
-					<td width="55%" align="left" valign="middle" id="p5" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l5" onclick="editContent('5')" style="color:black;"></a></td>
-					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e5" onclick="updateContent('5')" style="display:none;color:green;">edit</a></td>
+					<td width="55%" align="left" valign="middle" id="p5" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l5" onClick="editContent('5')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e5" onClick="updateContent('5')" style="display:none;color:green;">edit</a></td>
 				</tr>
 				
 				<tr>
 					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Favourite sports team:</td>
-					<td width="55%" align="left" valign="middle" id="p6" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l6" onclick="editContent('6')" style="color:black;"></a></td>
-					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e6" onclick="updateContent('6')" style="display:none;color:green;">edit</a></td>
+					<td width="55%" align="left" valign="middle" id="p6" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l6" onClick="editContent('6')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e6" onClick="updateContent('6')" style="display:none;color:green;">edit</a></td>
 				</tr>
 				
 				<tr>
 					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Favourite international sports team:</td>
-					<td width="55%" align="left" valign="middle" id="p7" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l7" onclick="editContent('7')" style="color:black;"></a></td>
-					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e7" onclick="updateContent('7')" style="display:none;color:green;">edit</a></td>
+					<td width="55%" align="left" valign="middle" id="p7" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l7" onClick="editContent('7')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e7" onClick="updateContent('7')" style="display:none;color:green;">edit</a></td>
 				</tr>
 				
 				<tr>
 					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Favourite individual sport:</td>
-					<td width="55%" align="left" valign="middle" id="p8" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l8" onclick="editContent('8')" style="color:black;"></a></td>
-					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e8" onclick="updateContent('8')" style="display:none;color:green;">edit</a></td>
+					<td width="55%" align="left" valign="middle" id="p8" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l8" onClick="editContent('8')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e8" onClick="updateContent('8')" style="display:none;color:green;">edit</a></td>
 				</tr>
 				
 				<tr>
 					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Favourite sport individual:</td>
-					<td width="55%" align="left" valign="middle" id="p9" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l9" onclick="editContent('9')" style="color:black;"></a></td>
-					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e9" onclick="updateContent('9')" style="display:none;color:green;">edit</a></td>
+					<td width="55%" align="left" valign="middle" id="p9" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l9" onClick="editContent('9')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e9" onClick="updateContent('9')" style="display:none;color:green;">edit</a></td>
 				</tr>
 				
 				<tr>
 					<td width="35%" align="right" valign="middle" style="padding-bottom:4px;color:#6f8383; font-family: 'Ubuntu';font-size:10px;">Favourite Premiership football team:</td>
-					<td width="55%" align="left" valign="middle" id="p10" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l10" onclick="editContent('10')" style="color:black;"></a></td>
-					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e10" onclick="updateContent('10')" style="display:none;color:green;">edit</a></td>
+					<td width="55%" align="left" valign="middle" id="p10" style="padding-bottom:4px;color:#000; padding-left:10px; font-family: 'Ubuntu';font-size:12px; font-weight:bold;"><a href="#" id="l10" onClick="editContent('10')" style="color:black;"></a></td>
+					<td width="10%" align="center" valign="middle" style="padding-bottom:4px;"><a href="#" id="e10" onClick="updateContent('10')" style="display:none;color:green;">edit</a></td>
 				</tr>
 				
 				<tr>
@@ -3078,53 +3071,53 @@
 			</div>
 			<div style="clear:both"></div>
 			<div>
-				<a href="#"><p class="tag_left" id="t1" onclick="getQuestion('1')"></p></a>
-				<a href="#"><p class="tag_right" id="t11" onclick="getQuestion('11')"></p></a>
+				<a href="#"><p class="tag_left" id="t1" onClick="getQuestion('1')"></p></a>
+				<a href="#"><p class="tag_right" id="t11" onClick="getQuestion('11')"></p></a>
 			</div>
 			<div style="clear:both"></div>
 			<div>
-				<a href="#"><p class="tag_left" id="t2" onclick="getQuestion('2')"></p></a>
-				<a href="#"><p class="tag_right" id="t12" onclick="getQuestion('12')"></p></a>
+				<a href="#"><p class="tag_left" id="t2" onClick="getQuestion('2')"></p></a>
+				<a href="#"><p class="tag_right" id="t12" onClick="getQuestion('12')"></p></a>
 			</div>
 			<div style="clear:both"></div>
 			<div>
-				<a href="#"><p class="tag_left" id="t3" onclick="getQuestion('3')"></p></a>
-				<a href="#"><p class="tag_right" id="t13" onclick="getQuestion('13')"></p></a>
+				<a href="#"><p class="tag_left" id="t3" onClick="getQuestion('3')"></p></a>
+				<a href="#"><p class="tag_right" id="t13" onClick="getQuestion('13')"></p></a>
 			</div>
 			<div style="clear:both"></div>
 			<div>
-				<a href="#"><p class="tag_left" id="t4" onclick="getQuestion('4')"></p></a>
-				<a href="#"><p class="tag_right" id="t14" onclick="getQuestion('14')"></p></a>
+				<a href="#"><p class="tag_left" id="t4" onClick="getQuestion('4')"></p></a>
+				<a href="#"><p class="tag_right" id="t14" onClick="getQuestion('14')"></p></a>
 			</div>
 			<div style="clear:both"></div>
 			<div>
-				<a href="#"><p class="tag_left" id="t5" onclick="getQuestion('5')"></p></a>
-				<a href="#"><p class="tag_right" id="t15" onclick="getQuestion('15')"></p></a>
+				<a href="#"><p class="tag_left" id="t5" onClick="getQuestion('5')"></p></a>
+				<a href="#"><p class="tag_right" id="t15" onClick="getQuestion('15')"></p></a>
 			</div>
 			<div style="clear:both"></div>
 			<div>
-				<a href="#"><p class="tag_left" id="t6" onclick="getQuestion('6')"></p></a>
-				<a href="#"><p class="tag_right" id="t16" onclick="getQuestion('16')"></p></a>
+				<a href="#"><p class="tag_left" id="t6" onClick="getQuestion('6')"></p></a>
+				<a href="#"><p class="tag_right" id="t16" onClick="getQuestion('16')"></p></a>
 			</div>
 			<div style="clear:both"></div>
 			<div>
-				<a href="#"><p class="tag_left" id="t7" onclick="getQuestion('7')"></p></a>
-				<a href="#"><p class="tag_right" id="t17" onclick="getQuestion('17')"></p></a>
+				<a href="#"><p class="tag_left" id="t7" onClick="getQuestion('7')"></p></a>
+				<a href="#"><p class="tag_right" id="t17" onClick="getQuestion('17')"></p></a>
 			</div>
 			<div style="clear:both"></div>
 			<div>
-				<a href="#"><p class="tag_left" id="t8" onclick="getQuestion('8')"></p></a>
-				<a href="#"><p class="tag_right" id="t18" onclick="getQuestion('18')"></p></a>
+				<a href="#"><p class="tag_left" id="t8" onClick="getQuestion('8')"></p></a>
+				<a href="#"><p class="tag_right" id="t18" onClick="getQuestion('18')"></p></a>
 			</div>
 			<div style="clear:both"></div>
 			<div>
-				<a href="#"><p class="tag_left" id="t9" onclick="getQuestion('9')"></p></a>
-				<a href="#"><p class="tag_right" id="t19" onclick="getQuestion('19')"></p></a>
+				<a href="#"><p class="tag_left" id="t9" onClick="getQuestion('9')"></p></a>
+				<a href="#"><p class="tag_right" id="t19" onClick="getQuestion('19')"></p></a>
 			</div>
 			<div style="clear:both"></div>
 			<div>
-				<a href="#"><p class="tag_left" id="t10" onclick="getQuestion('10')"></p></a>
-				<a href="#"><p class="tag_right" id="t20" onclick="getQuestion('20')"></p></a>
+				<a href="#"><p class="tag_left" id="t10" onClick="getQuestion('10')"></p></a>
+				<a href="#"><p class="tag_right" id="t20" onClick="getQuestion('20')"></p></a>
 			</div>
 		</div>
 		
@@ -3476,9 +3469,9 @@
 		</div>
 		
 		<div data-role="content">
-			<a href="#" ><img src="images/Gmail.png" id="gmail_option" onclick="getContacts('gmail')" style="padding-bottom:35px;padding-top:25px;padding-left:8px;" /></a>
-			<a href="#" ><img src="images/Hotmail.png" id="hotmail_option" onclick="getContacts('hptmail')" style="padding-bottom:35px;" /></a>
-			<a href="#" ><img src="images/Yahoo.png" id="yahoo_option" onclick="getContacts('yahoo')" style="padding-bottom:35px;padding-left:7px;" /></a>
+			<a href="#" ><img src="images/Gmail.png" id="gmail_option" onClick="getContacts('gmail')" style="padding-bottom:35px;padding-top:25px;padding-left:8px;" /></a>
+			<a href="#" ><img src="images/Hotmail.png" id="hotmail_option" onClick="getContacts('hptmail')" style="padding-bottom:35px;" /></a>
+			<a href="#" ><img src="images/Yahoo.png" id="yahoo_option" onClick="getContacts('yahoo')" style="padding-bottom:35px;padding-left:7px;" /></a>
 		</div>
 	</div>
 	
