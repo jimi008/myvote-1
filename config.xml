@@ -83,12 +83,7 @@
      
      
 
-     <gap:plugin name="com.phonegap.plugins.facebookconnect">
-  <param name="APIKey" value="510754562362091" />
-  <param name="APISecret" value="1b1468218c156da7a9558860e8efc19b" />
-</gap:plugin>
-     
-     
+    
      
      <!--
 <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.4.0">
