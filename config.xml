@@ -85,12 +85,12 @@
 
     
      
-     <!--
+     
 <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.4.0">
     <param name="APP_ID" value="691773454197271" />
-    <param name="APP_NAME" value="MyVote" />
+    <param name="APP_NAME" value="My Vote" />
 </gap:plugin>
-   
+   <!--
         Define access to external domains.
 
         <access />            - a blank access tag denies access to all external resources.
